@@ -8,7 +8,9 @@ export function PageContainer(props) {
       <Box sx={{display: 'flex', gap: '20px'}}>
         <NavBar/>
         <ScopedCssBaseline>
+          <Box sx={{margin: 'auto'}}>
             {props.content}
+          </Box>
         </ScopedCssBaseline>
       </Box>
   );
