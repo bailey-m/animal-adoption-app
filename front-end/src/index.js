@@ -6,17 +6,26 @@ import {PageContainer} from './layouts/PageContainer';
 import {SearchPetProfilesPageContent} from './layouts/SearchPetProfilesPageContent';
 import PetCard from './components/PetCard';
 
-const disp = {
-    goodWithAnimals: true,
-    goodWithChildren: true,
-    leashed: false
-};
+const testPetInfo = {
+    name: 'NAME',
+    age: 'AGE',
+    breed: 'BREED',
+    description: 'DESCRIPTION GOES HERE',
+    availability: 'Pending',
+    disposition: {
+        goodWithAnimals: true,
+        goodWithChildren: false,
+        leashed: true
+    },
+    species: 'SPECIES',
+    image: 'https://static01.nyt.com/images/2019/06/17/science/17DOGS/17DOGS-mobileMasterAt3x-v2.jpg'
+}
 
 ReactDOM.render(
     <BrowserRouter>
         <Routes>
-            <Route path='/' element={<PageContainer content={<PetCard name='cute doggo' age='3 years old' breed='cutie' description="He's a cute smol boi" availability disposition={disp} species='dog'/>} />} />
-            <Route path='/findamatch' element={<PageContainer content={<div>Hello World</div>} />} />
+            <Route path='/' element={<PageContainer content={<HelloWorldContainer />} />} />
+            <Route path='/findamatch' element={<PageContainer content={<PetCard petInfo={testPetInfo} />} />} />
             <Route path='/pets' element={<PageContainer content={<SearchPetProfilesPageContent/>} />} />
             <Route path='/news' element={<PageContainer content={<div>Hello World</div>} />} />
             <Route path='/profile' element={<PageContainer content={<div>Hello World</div>} />} />

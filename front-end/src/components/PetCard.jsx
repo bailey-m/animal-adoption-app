@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -14,10 +14,19 @@ import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
-import { spacing } from '@mui/system';
 
 /* 
 PASS IN DATABASE INFORMATION AS PROPS
+
+PROPS NEEDED:
+    name            STRING
+    age             STRING????
+    breed           STRING
+    description     STRING
+    availability    STRING
+    disposition     JSON {goodWithAnimals(bool), goodWithChildren(bool), leashed(bool)}
+    species         STRING
+    image           STRING URL
 */
 
 
@@ -25,88 +34,96 @@ class PetCard extends Component {
     state = {  } 
 
     availability() {
-        if (this.props.availability) {
-            return <Chip label='Available' color='success'/>
-        } else {
-            return <Chip label='Unavailable' color='error'/>
+        const gridInfo = {gridRow:'5', gridColumnStart:'3', gridColumnEnd:'5'};
+
+        switch (this.props.petInfo.availability) {
+            case 'Available':
+                return <Chip label='Available' color='success' sx={gridInfo}/>
+
+            case 'Not Available':
+                return <Chip label='Not Available' color='error' sx={gridInfo}/>
+
+            case 'Pending':
+                return <Chip label='Pending' color='warning' sx={gridInfo} />
+
+            case 'Adopted':
+                return <Chip label='Adopted' color='primary' sx={gridInfo} />
+            
+            default:
+                return <Chip label='Status Unknown' color='secondary' sx={gridInfo} />
         }
+
     }
 
     render() { 
         return (
-        <Card sx={{ maxWidth: 400 }}>
+        <Card sx={{ maxWidth: 500 }} raised>
             <CardMedia
                 component='img'
                 height='auto'
-                image='https://static01.nyt.com/images/2019/06/17/science/17DOGS/17DOGS-mobileMasterAt3x-v2.jpg'
-                alt={this.props.name}
+                image={this.props.petInfo.image}
+                alt={this.props.petInfo.name}
             />
-            <CardContent sx={{display: 'flex', flexDirection:'column', alignItems:'center', width: 400}}>
-                <Typography gutterBottom variant='h5' component='div' >
-                    {this.props.name}
-                </Typography>
-
-                {/* TODO make this not suck */}
-                <Grid
-                    container
-                    direction='row'
-                    justifyContent='space-around'
-                    alignItems='center'
-                >
-                    <Typography gutterBottom variant='h5' component='div' sx={{m:1}}>
-                        {this.props.age}
-                    </Typography>
-                    <Divider orientation='vertical' flexItem sx={{m:1}}/>
-                    <Typography gutterBottom variant='h5' component='div' sx={{m:1}}>
-                        {this.props.breed}
-                    </Typography>
-                </Grid>
+            <CardContent >
+                <Box sx={{
+                    display: 'grid',
+                    gap: .5,
+                    gridTemplateRows: 'repeat(9, 1fr)',
+                    gridTemplateColumns: 'repeat(6, 1fr)',
+                    alignItems: 'center'
+                }}>
                 
-                <Typography variant='body2' color='text.secondary'>
-                    {this.props.description}
-                </Typography>
+                    <Typography align='center' variant='h5' sx={{gridRow:'1', gridColumnStart:'2', gridColumnEnd:'6' }} >{this.props.petInfo.name}</Typography>
+                    
+                    <Typography align='center' variant='subtitle1' sx={{gridRow:'2', gridColumnStart:'2', gridColumnEnd:'4' }} >{this.props.petInfo.age}</Typography>
+                         
+                    {/* CHANGE COLOR??????????????????*/ }
+                    <Divider orientation='vertical' sx={{gridRow:'2', gridColumn:'3'}} />    
+                        
+                    <Typography align='center' variant='subtitle1' sx={{gridRow:'2', gridColumnStart:'4', gridColumnEnd:'6'}} >{this.props.petInfo.breed}</Typography>                   
+                    
+                    <Typography 
+                        variant='body2'
+                        align='center'
+                        color='text.secondary' 
+                        sx={{gridRowStart:'3', gridRowEnd:'5', gridColumnStart:'2', gridColumnEnd:'6'}}
+                    >
+                        {this.props.petInfo.description}
+                    </Typography>
 
-                {this.availability()}
-
-                <List
-                    sx={{width: '100%', maxWidth:200}}
-                >
-                    <ListItem disablePadding>
-                        <ListItemIcon>
-                            {this.props.disposition.goodWithAnimals && <CheckBoxIcon/>}
-                        </ListItemIcon>
-                        <ListItemText primary='Good with animals'/>
-                    </ListItem>
-                    <ListItem disablePadding>
-                        <ListItemIcon>
-                            {this.props.disposition.goodWithChildren && <CheckBoxIcon/>}
-                        </ListItemIcon>
-                        <ListItemText primary='Good with children'/>
-                    </ListItem>
-                    <ListItem disablePadding>
-                        <ListItemIcon>
-                            {this.props.disposition.leashed && <CheckBoxIcon/>}
-                        </ListItemIcon>
-                        <ListItemText primary='Must be leashed at all times'/>
-                    </ListItem>
-                </List>
-                
-                <Grid
-                    container
-                    direction='row'
-                    justifyContent='space-around'
-                    alignItems='center'
-                >
-                    <Button color='success' variant='contained'>
-                        <FavoriteIcon sx={{mr:1}}/>
-                        Like this {this.props.species}
+                    {this.availability()}
+                                        
+                    <List
+                        sx={{gridRowStart:'6', gridRowEnd:'9', gridColumnStart:'2', gridColumnEnd:'6', mx:'auto'}}
+                    >
+                        <ListItem disablePadding>
+                            <ListItemIcon>
+                                {this.props.petInfo.disposition.goodWithAnimals && <CheckBoxIcon/>}
+                            </ListItemIcon>
+                            <ListItemText primary='Good with animals' primaryTypographyProps={{variant:'subtitle2'}}/>
+                        </ListItem>
+                        <ListItem disablePadding>
+                            <ListItemIcon>
+                                {this.props.petInfo.disposition.goodWithChildren && <CheckBoxIcon/>}
+                            </ListItemIcon>
+                            <ListItemText primary='Good with children' primaryTypographyProps={{variant:'subtitle2'}}/>
+                        </ListItem>
+                        <ListItem disablePadding>
+                            <ListItemIcon>
+                                {this.props.petInfo.disposition.leashed && <CheckBoxIcon/>}
+                            </ListItemIcon>
+                            <ListItemText primary='Must be leashed at all times' primaryTypographyProps={{variant:'subtitle2'}}/>
+                        </ListItem>
+                    </List>
+                    
+                    <Button startIcon={<FavoriteIcon />} color='success' variant='contained' sx={{gridRow:'9', gridColumn:'span 3'}}>
+                        Like this {this.props.petInfo.species}
                     </Button>
-                    <Button color='error' variant='contained'>
-                        <CloseIcon sx={{mr:1}} />
+            
+                    <Button startIcon={<CloseIcon />} color='error' variant='contained' sx={{gridRow:'9', gridColumn:'span 3'}}>
                         Not for me
                     </Button>
-                </Grid>
-
+                </Box>
             </CardContent>
         </Card>);
     }
