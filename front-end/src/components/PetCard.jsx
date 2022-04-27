@@ -75,12 +75,12 @@ class PetCard extends Component {
                 
                     <Typography align='center' variant='h5' sx={{gridRow:'1', gridColumnStart:'2', gridColumnEnd:'6' }} >{this.props.petInfo.name}</Typography>
                     
-                    <Typography align='center' variant='subtitle1' sx={{gridRow:'2', gridColumnStart:'2', gridColumnEnd:'4' }} >{this.props.petInfo.age}</Typography>
+                    <Typography align='center' variant='subtitle1' sx={{gridRow:'2', gridColumnStart:'1', gridColumnEnd:'4' }} >{this.props.petInfo.age}</Typography>
                          
                     {/* CHANGE COLOR??????????????????*/ }
                     <Divider orientation='vertical' sx={{gridRow:'2', gridColumn:'3'}} />    
                         
-                    <Typography align='center' variant='subtitle1' sx={{gridRow:'2', gridColumnStart:'4', gridColumnEnd:'6'}} >{this.props.petInfo.breed}</Typography>                   
+                    <Typography align='center' variant='subtitle1' sx={{gridRow:'2', gridColumnStart:'4', gridColumn:'span 3'}} >{this.props.petInfo.breed}</Typography>                   
                     
                     <Typography 
                         variant='body2'

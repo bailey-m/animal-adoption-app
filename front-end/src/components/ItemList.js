@@ -8,6 +8,8 @@ import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
+import NewsCard from './NewsCard';
+import PetCard from './PetCard';
 
 const style = {
   position: 'absolute',
@@ -21,7 +23,17 @@ const style = {
   p: 4,
 };
 
-export function ItemCard(props) {
+export function ItemCard(props) {  
+
+  let info;
+
+  for (var item of props.data) {
+    if (item.id == parseInt(props.itemId, 10)) {
+      info = item;
+      break;
+    }
+  }
+
   return (
     <div>
       <Modal
@@ -32,7 +44,8 @@ export function ItemCard(props) {
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            Render pet or news card here for itemId = {props.itemId}
+            { props.card === 'NewsCard' && <NewsCard news={info}/> }
+            { props.card === 'PetCard' && <PetCard petInfo={info} /> }
           </Typography>
         </Box>
       </Modal>
@@ -61,7 +74,7 @@ export function ItemList(props) {
                 <Avatar src={item.photoUrl} />
               </ListItemAvatar>
               <ListItemText
-                primary={item.name}
+                primary={item.title || item.name}
                 secondary={
                   <React.Fragment>
                     <Typography
@@ -79,7 +92,7 @@ export function ItemList(props) {
           </>
         )}
       </List>
-      <ItemCard open={cardOpen} onClose={handleCardClose} itemId={selectedItemId}/>
+      <ItemCard open={cardOpen} onClose={handleCardClose} itemId={selectedItemId} data={props.data} card={props.card}/>
     </>
   );
 }

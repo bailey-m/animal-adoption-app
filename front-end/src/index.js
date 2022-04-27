@@ -24,12 +24,7 @@ const testPetInfo = {
 }
 
 
-const testNewsInfo = {
-    date: 'April 20, 2022',
-    description: 'Cuddles is now available for adoption at your local adoption center!',
-    title: 'Cuddles is Available!',
-    imageURL: 'https://post.medicalnewstoday.com/wp-content/uploads/sites/3/2020/02/322868_1100-800x825.jpg'
-}
+
 
 
 ReactDOM.render(
@@ -39,7 +34,7 @@ ReactDOM.render(
             <Route path='/' element={<PageContainer content={<HelloWorldContainer />} />} />
             <Route path='/findamatch' element={<PageContainer content={<PetCard petInfo={testPetInfo} />} />} />
             <Route path='/pets' element={<PageContainer content={<SearchPetProfilesPageContent/>} />} />
-            <Route path='/news' element={<PageContainer content={<NewsCard news={testNewsInfo}/>} />} />
+            <Route path='/news' element={<PageContainer content={<NewsPageContent />} />} />
             <Route path='/profile' element={<PageContainer content={<div>Hello World</div>} />} />
         </Routes>
     </BrowserRouter>,
