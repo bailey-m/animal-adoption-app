@@ -26,7 +26,7 @@ const get_collection = async(collection) => {
 
 const get_pet_by_id = async(petId) => {
     try {
-        let documentRef = firestore.doc('Pets/' + petId);
+        let documentRef = firestore.doc('pets/' + petId);
         return documentRef.get().then(documentSnapshot => {
             if (documentSnapshot.exists) {
                 return documentSnapshot.data();
@@ -47,7 +47,7 @@ app.get('/helloworld', async (req, res) => {
     res.send(data);
 });
 
-app.get('/petcard', async (req, res) => {
+app.get('/pets', async (req, res) => {
     // Get the list of document ids
     let collection = await get_collection('Pets');
     let pets = [];

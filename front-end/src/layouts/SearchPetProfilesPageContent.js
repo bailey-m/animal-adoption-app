@@ -39,7 +39,7 @@ const mockPetData = [
 export function SearchPetProfilesPageContent() {
   const [data, setData] = useState(mockPetData);
   React.useEffect(() => {
-    axios.get('http://localhost:8080/petcard')
+    axios.get('http://localhost:8080/pets')
     .then((response) => {
       console.log(response);
       setData(response.data);
