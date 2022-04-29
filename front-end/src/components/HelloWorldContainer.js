@@ -14,7 +14,7 @@ function HelloWorldText(props) {
     axios.get('http://localhost:8080/helloworld')
     .then((response) => {
       console.log(response);
-      setData(response.data.data);
+      setData("Hello World");
     })
     .catch((error) => {
       console.log(error);

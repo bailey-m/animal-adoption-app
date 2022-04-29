@@ -1,6 +1,8 @@
 import { TrapFocus } from '@mui/base';
 import * as React from 'react';
+import {useState} from 'react';
 import { ItemList } from '../components/ItemList';
+import axios from 'axios';
 
 const mockPetData = [
   {
@@ -33,11 +35,23 @@ const mockPetData = [
   },
 ]
 
+// TODO add loading wheel instead of mock data when pulling from Firestore
 export function SearchPetProfilesPageContent() {
+  const [data, setData] = useState(mockPetData);
+  React.useEffect(() => {
+    axios.get('http://localhost:8080/pets')
+    .then((response) => {
+      console.log(response);
+      setData(response.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }, []);
   // TODO insert query for list of data on page load
   // TODO insert search/filters with Search button that queries based on filters
   // TODO pass in card to render (either pet or news card) as prop to item list, which will pass to Modal to open
   return (
-    <ItemList sx={{margin: 'auto'}} data={mockPetData} card='PetCard'/>
+    <ItemList sx={{margin: 'auto'}} data={data} card='PetCard'/>
   );
 }
