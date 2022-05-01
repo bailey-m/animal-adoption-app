@@ -33,6 +33,9 @@ ATTRIBUTES NEEDED IN PROP:
 class PetCard extends Component {
     state = {  } 
 
+
+    
+
     availability() {
         const gridInfo = {gridRow:'5', gridColumnStart:'3', gridColumnEnd:'5'};
 
