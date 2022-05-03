@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import CircularProgress from '@mui/material/CircularProgress';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider';
@@ -45,7 +46,7 @@ export function ItemCard(props) {
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
             { props.card === 'NewsCard' && <NewsCard news={info}/> }
-            { props.card === 'PetCard' && <PetCard petInfo={info} /> }
+            { props.card === 'PetCard' && <PetCard petInfo={info} handleClose={props.onClose} /> }
           </Typography>
         </Box>
       </Modal>
@@ -66,6 +67,9 @@ export function ItemList(props) {
 
   return (
     <>
+    {!props.data && <CircularProgress /> }
+    {props.data && (
+      <>
       <List sx={{ width: 'fit-content', bgcolor: 'background.paper'}}>
         {props.data.map(item =>
           <>
@@ -93,6 +97,8 @@ export function ItemList(props) {
         )}
       </List>
       <ItemCard open={cardOpen} onClose={handleCardClose} itemId={selectedItemId} data={props.data} card={props.card}/>
+      </>
+    )}
     </>
   );
 }
