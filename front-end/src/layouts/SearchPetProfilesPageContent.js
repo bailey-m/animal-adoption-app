@@ -8,7 +8,7 @@ import axios from 'axios';
 export function SearchPetProfilesPageContent() {
   const [data, setData] = useState(null);
   React.useEffect(() => {
-    axios.get('http://localhost:8080/pets')
+    axios.get('https://backend-dot-animal-adoption-app-347718.uc.r.appspot.com/pets')
     .then((response) => {
       console.log(response);
       setData(response.data);

@@ -4,6 +4,7 @@ const app = express();
 const {Firestore, QuerySnapshot} = require('@google-cloud/firestore');
 const firestore = new Firestore();
 app.use(cors());
+app.enable('trust proxy');
 
 
 // Turns a collection into a list of document IDs
