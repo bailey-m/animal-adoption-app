@@ -5,7 +5,6 @@ const {Firestore, QuerySnapshot} = require('@google-cloud/firestore');
 const firestore = new Firestore();
 app.use(cors());
 
-// *** Begin Pet model functions ***
 
 // Turns a collection into a list of document IDs
 // Based on code from: https://stackoverflow.com/questions/61435004/get-all-documents-from-a-collection
@@ -24,6 +23,8 @@ const get_collection_ids = async(collection) => {
     } 
 }
 
+// *** Begin Pet model functions ***
+
 const get_pet_by_id = async(petId) => {
     try {
         let documentRef = firestore.doc('Pets/' + petId);
@@ -39,6 +40,26 @@ const get_pet_by_id = async(petId) => {
 }
 
 // *** End Pet model functions ***
+
+
+// *** Begin News model functions ***
+
+const get_news_by_id = async(newsId) => {
+    try {
+        let documentRef = firestore.doc('News_Item/' + newsId);
+        return documentRef.get().then(documentSnapshot => {
+            if (documentSnapshot.exists) {
+                return documentSnapshot.data();
+            }
+            else return 'No data retrieved';
+        });
+    } catch(err) {
+        console.log(err);
+    } 
+}
+
+// *** End News model functions ***
+
 
 // *** Begin Pet controller functions ***
 app.get('/helloworld', async (req, res) => {
@@ -74,6 +95,25 @@ app.get('/pets', async (req, res) => {
 });
 
 // *** End Pet controller functions ***
+
+app.get('/news', async (req, res) => {
+    // Get the list of document ids
+    let news_collection = await get_collection_ids('News_Item');
+    let news = [];
+
+    // Add an entry for each document
+    for (var news_index in news_collection){
+        let newsDocument = await get_news_by_id(news_collection[news_index]);
+        temp = {};
+        temp["id"] = newsDocument.ID;
+        temp["title"] = newsDocument.Title;
+        temp["image"] = newsDocument.imageURL;
+        temp["description"] = newsDocument.Description;
+        temp["date"] = newsDocument.Date
+        news.push(temp);
+    }
+    res.send(news);
+});
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
