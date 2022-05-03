@@ -9,3 +9,7 @@ To start up the app for the first time:
 6. From the root directory, run `cd front-end`.
 7. Run `npm install`.
 8. Run `npm start`. This will start the app on port 3000.
+
+9. Set your `NODE_ENV` environment variable to `development`. This will point the front-end to our server running at http://localhost:8080. On Windows, the command to do this is:
+`$env:NODE_ENV = 'production'`
+For the syntax to do this on other operating systems, refer to (https://www.geeksforgeeks.org/node_env-variables-and-how-to-use-them/).
