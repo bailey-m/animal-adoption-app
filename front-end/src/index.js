@@ -23,14 +23,16 @@ const testPetInfo = {
     image: 'https://static01.nyt.com/images/2019/06/17/science/17DOGS/17DOGS-mobileMasterAt3x-v2.jpg'
 }
 
-
-
-
+export let API_URL;
+if(process.env.NODE_ENV == 'development') {
+    API_URL = 'http://localhost:8080';
+} else {
+    API_URL = 'https://backend-dot-animal-adoption-app-347718.uc.r.appspot.com';
+}
 
 ReactDOM.render(
     <BrowserRouter>
         <Routes>
-
             <Route path='/' element={<PageContainer content={<HelloWorldContainer />} />} />
             <Route path='/findamatch' element={<PageContainer content={<PetCard petInfo={testPetInfo} />} />} />
             <Route path='/pets' element={<PageContainer content={<SearchPetProfilesPageContent/>} />} />
