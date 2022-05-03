@@ -107,9 +107,9 @@ app.get('/news', async (req, res) => {
         temp = {};
         temp["id"] = newsDocument.ID;
         temp["title"] = newsDocument.Title;
-        temp["image"] = newsDocument.imageURL;
+        temp["imageURL"] = newsDocument.imageURL;
         temp["description"] = newsDocument.Description;
-        temp["date"] = newsDocument.Date
+        temp["date"] = newsDocument.Date.toDate().toDateString()
         news.push(temp);
     }
     res.send(news);
