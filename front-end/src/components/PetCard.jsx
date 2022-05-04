@@ -33,7 +33,13 @@ ATTRIBUTES NEEDED IN PROP:
 class PetCard extends Component {
     state = {  } 
 
+    handleDislike = () => {
+        this.props.handleClose()
+    }
 
+    handleLike = () => {
+        this.props.handleClose()
+    }
     
 
     availability() {
@@ -119,11 +125,11 @@ class PetCard extends Component {
                         </ListItem>
                     </List>
                     
-                    <Button startIcon={<FavoriteIcon />} color='success' variant='contained' sx={{gridRow:'9', gridColumn:'span 3'}}>
+                    <Button onClick={this.handleLike} startIcon={<FavoriteIcon />} color='success' variant='contained' sx={{gridRow:'9', gridColumn:'span 3'}}>
                         Like this {this.props.petInfo.species}
                     </Button>
             
-                    <Button startIcon={<CloseIcon />} color='error' variant='contained' sx={{gridRow:'9', gridColumn:'span 3'}}>
+                    <Button onClick={this.handleDislike} startIcon={<CloseIcon />} color='error' variant='contained' sx={{gridRow:'9', gridColumn:'span 3'}}>
                         Not for me
                     </Button>
                 </Box>

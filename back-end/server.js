@@ -4,6 +4,7 @@ const app = express();
 const {Firestore, QuerySnapshot} = require('@google-cloud/firestore');
 const firestore = new Firestore();
 app.use(cors());
+app.enable('trust proxy');
 
 
 // Turns a collection into a list of document IDs
@@ -77,7 +78,7 @@ app.get('/pets', async (req, res) => {
     for (var pet_index in pet_collection){
         let petDocument = await get_pet_by_id(pet_collection[pet_index]);
         temp = {};
-        temp["id"] = petDocument.ID;
+        temp["id"] = pet_index;
         temp["name"] = petDocument.Name;
         temp["image"] = petDocument.imageURL;
         temp["description"] = petDocument.Description;
@@ -105,7 +106,7 @@ app.get('/news', async (req, res) => {
     for (var news_index in news_collection){
         let newsDocument = await get_news_by_id(news_collection[news_index]);
         temp = {};
-        temp["id"] = newsDocument.ID;
+        temp["id"] = news_index;
         temp["title"] = newsDocument.Title;
         temp["imageURL"] = newsDocument.imageURL;
         temp["description"] = newsDocument.Description;
