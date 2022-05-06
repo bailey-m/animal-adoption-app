@@ -116,6 +116,27 @@ app.get('/news', async (req, res) => {
     res.send(news);
 });
 
+ // TODO: Change collection name from 'Test_Pets' to just 'Pets'
+app.post('/pets', async (req, res) =>{
+    await firestore.collection('Test_Pets').add({
+        // We can safely delete the ID feild after we re-deploy my branch or our assignment is graded
+        ID: 3,
+        Availability: "Available",
+        Species: req.query.Species,
+        Breed: req.query.Breed,
+        Date_Added: Firestore.Timestamp.now(),
+        Description: req.query.Description,
+        Disposition: [
+            req.query.Good_With_Animals == 'true', 
+            req.query.Good_With_Children == 'true', 
+            req.query.Must_Be_Leashed == 'true'
+        ],
+        Name: req.query.Name,
+        Age: Number(req.query.Age),
+        imageURL: 'https://upload.wikimedia.org/wikipedia/commons/f/f0/Mops_oct09_cropped2.jpg'
+    });
+});
+
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}...`);
