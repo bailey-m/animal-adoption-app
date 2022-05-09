@@ -130,7 +130,7 @@ export function NewPetForm(props) {
             </FormGroup>
             <TextField id="outlined-basic" label="Description" variant="outlined" multiline rows={2} value={description} 
                 onChange={(e) => {setDescription(e.target.value);}}/>
-            <Button variant='contained' onClick = {() => axios.post(`${API_URL}/pets`, null, {params: {
+            <Button variant='contained' onClick = {() => {axios.post(`${API_URL}/pets`, null, {params: {
                 Name: name,
                 Age: age, 
                 Breed: breed, 
@@ -139,7 +139,7 @@ export function NewPetForm(props) {
                 Good_With_Animals: good_with_animals,
                 Good_With_Children: good_with_children,
                 Must_Be_Leashed: must_be_leashed,
-                }})}>Add Pet</Button>
+                }});}}>Add Pet</Button>
         </Box>
     )
 }

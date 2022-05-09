@@ -118,9 +118,8 @@ app.get('/news', async (req, res) => {
 
  // TODO: Change collection name from 'Test_Pets' to just 'Pets'
 app.post('/pets', async (req, res) =>{
-    await firestore.collection('Test_Pets').add({
+    await firestore.collection('Pets').add({
         // We can safely delete the ID feild after we re-deploy my branch or our assignment is graded
-        ID: 3,
         Availability: "Available",
         Species: req.query.Species,
         Breed: req.query.Breed,
