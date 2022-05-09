@@ -27,7 +27,6 @@ const style = {
 export function ItemCard(props) { 
 
   let info;
-  let i = 0;
   for (var item of props.data) {
     if (item.id == parseInt(props.itemId, 10)) {
       info = item;

@@ -116,7 +116,6 @@ app.get('/news', async (req, res) => {
     res.send(news);
 });
 
- // TODO: Change collection name from 'Test_Pets' to just 'Pets'
 app.post('/pets', async (req, res) =>{
     await firestore.collection('Pets').add({
         // We can safely delete the ID feild after we re-deploy my branch or our assignment is graded
@@ -132,6 +131,16 @@ app.post('/pets', async (req, res) =>{
         ],
         Name: req.query.Name,
         Age: Number(req.query.Age),
+        imageURL: 'https://upload.wikimedia.org/wikipedia/commons/f/f0/Mops_oct09_cropped2.jpg'
+    });
+});
+
+app.post('/news', async (req, res) =>{
+    await firestore.collection('News_Item').add({
+        // We can safely delete the ID feild after we re-deploy my branch or our assignment is graded
+        Date: Firestore.Timestamp.now(),
+        Description: req.query.Description,
+        Title: req.query.Title,
         imageURL: 'https://upload.wikimedia.org/wikipedia/commons/f/f0/Mops_oct09_cropped2.jpg'
     });
 });

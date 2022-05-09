@@ -14,6 +14,7 @@ import {useState} from 'react';
 import Checkbox from '@mui/material/Checkbox';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import { Input } from '@mui/material';
 
 const species = [
     'Dog',
@@ -130,6 +131,10 @@ export function NewPetForm(props) {
             </FormGroup>
             <TextField id="outlined-basic" label="Description" variant="outlined" multiline rows={2} value={description} 
                 onChange={(e) => {setDescription(e.target.value);}}/>
+            <Typography></Typography>
+            <Typography></Typography>
+            <Typography>Upload Photo</Typography>
+            <Input type="file"/>
             <Button variant='contained' onClick = {() => {axios.post(`${API_URL}/pets`, null, {params: {
                 Name: name,
                 Age: age, 
