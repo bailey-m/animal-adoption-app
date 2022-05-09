@@ -16,6 +16,7 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { Input } from '@mui/material';
 
+
 const species = [
     'Dog',
     'Cat',
@@ -76,6 +77,7 @@ const style = {
     gap: '10px'
   };
 
+
   // Sending info from textfield adapted from https://www.geeksforgeeks.org/how-to-use-textfield-component-in-reactjs/
 export function NewPetForm(props) {
 
@@ -95,6 +97,7 @@ export function NewPetForm(props) {
                 onChange={(e) => {setName(e.target.value);}}/>
             <TextField id="outlined-basic" label="Age" variant="outlined" value={age} sx={{width: 200 }} 
                 onChange={(e) => {setAge(e.target.value);}}/>
+
             <FormControl sx={{width: 200}}>
                 <InputLabel id="demo-simple-select-label">Species</InputLabel>
                 <Select
