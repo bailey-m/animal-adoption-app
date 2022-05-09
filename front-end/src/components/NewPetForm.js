@@ -77,7 +77,7 @@ const style = {
 
   // Sending info from textfield adapted from https://www.geeksforgeeks.org/how-to-use-textfield-component-in-reactjs/
 export function NewPetForm(props) {
-    
+
     const [name, setName] = useState("");
     const [age, setAge] = useState("");
     const [breed, setBreed] = useState("");
@@ -139,7 +139,7 @@ export function NewPetForm(props) {
                 Good_With_Animals: good_with_animals,
                 Good_With_Children: good_with_children,
                 Must_Be_Leashed: must_be_leashed,
-                }});}}>Add Pet</Button>
+                }}); window.location.reload(false)}}>Add Pet</Button>
         </Box>
     )
 }

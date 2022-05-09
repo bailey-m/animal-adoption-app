@@ -24,7 +24,7 @@ const style = {
   p: 4,
 };
 
-export function ItemCard(props) {  
+export function ItemCard(props) { 
 
   let info;
   let i = 0;
