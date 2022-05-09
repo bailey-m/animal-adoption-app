@@ -7,6 +7,7 @@ import {SearchPetProfilesPageContent} from './layouts/SearchPetProfilesPageConte
 import {NewsPageContent} from './layouts/NewsPageContent';
 import PetCard from './components/PetCard';
 import NewsCard from './components/NewsCard';
+import UserProfilePage from './layouts/UserProfilePage';
 
 const testPetInfo = {
     name: 'NAME',
@@ -37,7 +38,7 @@ ReactDOM.render(
             <Route path='/findamatch' element={<PageContainer content={<PetCard petInfo={testPetInfo} />} />} />
             <Route path='/pets' element={<PageContainer content={<SearchPetProfilesPageContent/>} />} />
             <Route path='/news' element={<PageContainer content={<NewsPageContent />} />} />
-            <Route path='/profile' element={<PageContainer content={<div>Hello World</div>} />} />
+            <Route path='/profile' element={<PageContainer content={<UserProfilePage />} />} />
         </Routes>
     </BrowserRouter>,
     document.getElementById('root')
