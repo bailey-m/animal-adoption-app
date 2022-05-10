@@ -78,7 +78,7 @@ app.get('/pets', async (req, res) => {
     for (var pet_index in pet_collection){
         let petDocument = await get_pet_by_id(pet_collection[pet_index]);
         temp = {};
-        temp["id"] = petDocument.ID;
+        temp["id"] = pet_index;
         temp["name"] = petDocument.Name;
         temp["image"] = petDocument.imageURL;
         temp["description"] = petDocument.Description;
@@ -106,7 +106,7 @@ app.get('/news', async (req, res) => {
     for (var news_index in news_collection){
         let newsDocument = await get_news_by_id(news_collection[news_index]);
         temp = {};
-        temp["id"] = newsDocument.ID;
+        temp["id"] = news_index;
         temp["title"] = newsDocument.Title;
         temp["imageURL"] = newsDocument.imageURL;
         temp["description"] = newsDocument.Description;
@@ -114,6 +114,35 @@ app.get('/news', async (req, res) => {
         news.push(temp);
     }
     res.send(news);
+});
+
+app.post('/pets', async (req, res) =>{
+    await firestore.collection('Pets').add({
+        // We can safely delete the ID feild after we re-deploy my branch or our assignment is graded
+        Availability: "Available",
+        Species: req.query.Species,
+        Breed: req.query.Breed,
+        Date_Added: Firestore.Timestamp.now(),
+        Description: req.query.Description,
+        Disposition: [
+            req.query.Good_With_Animals == 'true', 
+            req.query.Good_With_Children == 'true', 
+            req.query.Must_Be_Leashed == 'true'
+        ],
+        Name: req.query.Name,
+        Age: Number(req.query.Age),
+        imageURL: 'https://upload.wikimedia.org/wikipedia/commons/f/f0/Mops_oct09_cropped2.jpg'
+    });
+});
+
+app.post('/news', async (req, res) =>{
+    await firestore.collection('News_Item').add({
+        // We can safely delete the ID feild after we re-deploy my branch or our assignment is graded
+        Date: Firestore.Timestamp.now(),
+        Description: req.query.Description,
+        Title: req.query.Title,
+        imageURL: 'https://upload.wikimedia.org/wikipedia/commons/f/f0/Mops_oct09_cropped2.jpg'
+    });
 });
 
 const PORT = process.env.PORT || 8080;
