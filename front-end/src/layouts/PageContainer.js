@@ -7,11 +7,11 @@ export function PageContainer(props) {
   return (
       <Box sx={{display: 'flex', gap: '20px'}}>
         <NavBar/>
-        <ScopedCssBaseline>
-          <Box sx={{margin: 'auto'}}>
+        {/* <ScopedCssBaseline> */}
+          <Box sx={{margin: 'auto', mt:'25px', width: .8}}>
             {props.content}
           </Box>
-        </ScopedCssBaseline>
+        {/* </ScopedCssBaseline> */}
       </Box>
   );
 }

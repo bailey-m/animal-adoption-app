@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import { ItemCard } from "../components/ItemList";
-import SimplePetCard from "../components/SimplePetCard";
+import { ItemCard } from "./ItemList";
+import SimplePetCard from "./SimplePetCard";
 import { Typography } from "@mui/material";
 
 export function UserLikedList(props) {
@@ -23,10 +23,7 @@ export function UserLikedList(props) {
       {props.data && (
         <>
             <List
-                sx={{
-                width: "fit-content",
-                bgcolor: "background.paper"
-                }}
+                sx={props.sx}
             >
                 {props.data.map((item) => (
                 <>

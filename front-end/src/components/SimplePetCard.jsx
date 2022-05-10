@@ -53,8 +53,9 @@ class SimplePetCard extends Component {
                             alignItems: "center",
                         }}
                     >
-                        <CardMedia
-                            component='img'
+                        
+                        <Avatar
+                            variant='rounded'
                             src={this.props.petInfo.image}
                             alt={this.props.petInfo.name}
                             sx={{
@@ -62,7 +63,8 @@ class SimplePetCard extends Component {
                                 gridRowEnd: "5",
                                 gridColumnStart: "1",
                                 gridColumnEnd: "5",
-                                objectFit: 'fill'
+                                height: 1,
+                                width: 1
                             }}
                         />
 
