@@ -38,7 +38,7 @@ class PetCard extends Component {
     }
 
     handleLike = () => {
-        this.props.handleClose()
+        this.props.handleLike()
     }
     
 

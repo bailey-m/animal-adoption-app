@@ -1,8 +1,11 @@
 const express = require('express');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 const app = express();
 const {Firestore, QuerySnapshot} = require('@google-cloud/firestore');
 const firestore = new Firestore();
+
+app.use(bodyParser.json());
 app.use(cors());
 app.enable('trust proxy');
 
@@ -61,6 +64,47 @@ const get_news_by_id = async(newsId) => {
 
 // *** End News model functions ***
 
+// *** Begin Users model functions ***
+
+async function get_user_by_id(userId) {
+    try {
+        let documentRef = firestore.doc('Users/' + userId);
+        return documentRef.get().then(documentSnapshot => {
+            if (documentSnapshot.exists) {
+                return documentSnapshot.data();
+            } else {
+                return 'No data retrieved';
+            }
+        })
+    } catch(err) {
+        console.log(err);
+    }
+}
+
+// *** End Users model functions ***
+
+// *** Begin Match model functions ***
+
+async function post_new_match(userID, petID) {
+    try {
+        const data = {
+            UserID: userID,
+            PetID: petID
+        }
+    
+        const response = await firestore.collection('Match').add(data);
+        return response;
+
+    } catch (error) {
+        console.log(error);
+    }
+
+}
+
+// *** End Match model functions ***
+
+
+
 
 // *** Begin Pet controller functions ***
 app.get('/helloworld', async (req, res) => {
@@ -75,10 +119,10 @@ app.get('/pets', async (req, res) => {
     let pets = [];
 
     // Add an entry for each document
-    for (var pet_index in pet_collection){
-        let petDocument = await get_pet_by_id(pet_collection[pet_index]);
+    for (var pet_id of pet_collection){
+        let petDocument = await get_pet_by_id(pet_id);
         temp = {};
-        temp["id"] = petDocument.ID;
+        temp["id"] = pet_id;
         temp["name"] = petDocument.Name;
         temp["image"] = petDocument.imageURL;
         temp["description"] = petDocument.Description;
@@ -115,6 +159,32 @@ app.get('/news', async (req, res) => {
     }
     res.send(news);
 });
+
+app.get('/users', async (req, res) => {
+    let user_collection = await get_collection_ids('Users');
+    let users = [];
+
+    for (let user_id of user_collection) {
+        let userDocument = await get_user_by_id(user_id);
+
+        temp = {
+            id: user_id,
+            about_me: userDocument["About Me"],
+            admin: userDocument["Admin Bool"],
+            email: userDocument["Email"]
+        }
+        users.push(temp);
+    }
+    res.send(users);
+});
+
+app.post('/match', async (req, res) => {
+    const response = await post_new_match(req.body.userID, req.body.petID);
+    
+    if (response) {
+        res.status(200).send();
+    }
+})
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

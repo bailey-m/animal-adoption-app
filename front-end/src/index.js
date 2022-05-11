@@ -8,6 +8,7 @@ import {NewsPageContent} from './layouts/NewsPageContent';
 import PetCard from './components/PetCard';
 import UserProfilePage from './layouts/UserProfilePageContent';
 import LandingPageContent from './layouts/LandingPageContent';
+import FindAMatchPageContent from './layouts/FindAMatchPageContent';
 
 const testPetInfo = {
     name: 'NAME',
@@ -35,7 +36,7 @@ ReactDOM.render(
     <BrowserRouter>
         <Routes>
             <Route path='/' element={<PageContainer content={<LandingPageContent />} />} />
-            <Route path='/findamatch' element={<PageContainer content={<PetCard petInfo={testPetInfo} />} />} />
+            <Route path='/findamatch' element={<PageContainer content={<FindAMatchPageContent />} />} />
             <Route path='/pets' element={<PageContainer content={<SearchPetProfilesPageContent/>} />} />
             <Route path='/news' element={<PageContainer content={<NewsPageContent />} />} />
             <Route path='/profile' element={<PageContainer content={<UserProfilePage />} />} />
