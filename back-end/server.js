@@ -122,6 +122,7 @@ app.get('/pets', async (req, res) => {
     for (var pet_id of pet_collection){
         let petDocument = await get_pet_by_id(pet_id);
         temp = {};
+
         temp["id"] = pet_id;
         temp["name"] = petDocument.Name;
         temp["image"] = petDocument.imageURL;
@@ -150,6 +151,7 @@ app.get('/news', async (req, res) => {
     for (var news_id of news_collection){
         let newsDocument = await get_news_by_id(news_id);
         temp = {};
+
         temp["id"] = news_id;
         temp["title"] = newsDocument.Title;
         temp["imageURL"] = newsDocument.imageURL;
@@ -159,6 +161,7 @@ app.get('/news', async (req, res) => {
     }
     res.send(news);
 });
+
 
 app.get('/users', async (req, res) => {
     let user_collection = await get_collection_ids('Users');
@@ -185,6 +188,36 @@ app.post('/match', async (req, res) => {
         res.status(200).send();
     }
 })
+
+app.post('/pets', async (req, res) =>{
+    await firestore.collection('Pets').add({
+        // We can safely delete the ID feild after we re-deploy my branch or our assignment is graded
+        Availability: "Available",
+        Species: req.query.Species,
+        Breed: req.query.Breed,
+        Date_Added: Firestore.Timestamp.now(),
+        Description: req.query.Description,
+        Disposition: [
+            req.query.Good_With_Animals == 'true', 
+            req.query.Good_With_Children == 'true', 
+            req.query.Must_Be_Leashed == 'true'
+        ],
+        Name: req.query.Name,
+        Age: Number(req.query.Age),
+        imageURL: 'https://upload.wikimedia.org/wikipedia/commons/f/f0/Mops_oct09_cropped2.jpg'
+    });
+});
+
+app.post('/news', async (req, res) =>{
+    await firestore.collection('News_Item').add({
+        // We can safely delete the ID feild after we re-deploy my branch or our assignment is graded
+        Date: Firestore.Timestamp.now(),
+        Description: req.query.Description,
+        Title: req.query.Title,
+        imageURL: 'https://upload.wikimedia.org/wikipedia/commons/f/f0/Mops_oct09_cropped2.jpg'
+    });
+});
+
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

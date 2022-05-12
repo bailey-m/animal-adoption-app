@@ -8,6 +8,7 @@ import axios from 'axios';
 import {API_URL} from '../index';
 import { NewPetForm } from '../components/NewPetForm';
 
+
 export function NewPetFormCard(props) {  
 
   return (
@@ -46,7 +47,7 @@ export function SearchPetProfilesPageContent() {
     <>
     <Box sx={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
       <Button onClick={handleCardOpen} variant='contained'>+ Add Pet</Button>
-      <NewPetFormCard open={cardOpen} onClose={handleCardClose} />
+      <NewPetFormCard open={cardOpen} onClose={handleCardClose}/>
     </Box>
     <Box>
       <ItemList sx={{margin: 'auto'}} data={data} card='PetCard'/>
