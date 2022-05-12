@@ -147,10 +147,10 @@ app.get('/news', async (req, res) => {
     let news = [];
 
     // Add an entry for each document
-    for (var news_index in news_collection){
-        let newsDocument = await get_news_by_id(news_collection[news_index]);
+    for (var news_id of news_collection){
+        let newsDocument = await get_news_by_id(news_id);
         temp = {};
-        temp["id"] = newsDocument.ID;
+        temp["id"] = news_id;
         temp["title"] = newsDocument.Title;
         temp["imageURL"] = newsDocument.imageURL;
         temp["description"] = newsDocument.Description;

@@ -8,7 +8,7 @@ import {NewsPageContent} from './layouts/NewsPageContent';
 import PetCard from './components/PetCard';
 import UserProfilePage from './layouts/UserProfilePageContent';
 import LandingPageContent from './layouts/LandingPageContent';
-import FindAMatchPageContent from './layouts/FindAMatchPageContent';
+import {FindAMatchPageContent} from './layouts/FindAMatchPageContent';
 
 const testPetInfo = {
     name: 'NAME',
