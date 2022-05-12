@@ -43,6 +43,26 @@ const get_pet_by_id = async(petId) => {
     } 
 }
 
+function format_pet_info (pet, id) {
+    temp = {};
+
+    temp["id"] = id;
+    temp["name"] = pet.Name;
+    temp["image"] = pet.imageURL;
+    temp["description"] = pet.Description;
+    temp["age"] = `${pet.Age} year(s) old`;
+    temp["breed"] = pet.Breed;
+    temp["availability"] = pet.Availability;
+    temp["disposition"] = {
+        goodWithAnimals: pet.Disposition[0],
+        goodWithChildren: pet.Disposition[1],
+        leashed: pet.Disposition[2]};
+    temp["species"] = pet.Species;
+
+    
+    return temp;
+}
+
 // *** End Pet model functions ***
 
 
@@ -98,7 +118,28 @@ async function post_new_match(userID, petID) {
     } catch (error) {
         console.log(error);
     }
+}
 
+async function get_matches(userID) {
+    try {
+        let matches = [];
+
+        const matchQuery = firestore.collection('Match').where('UserID', '==', userID);
+        const matchDocs = await matchQuery.get();
+
+        for (let doc of matchDocs.docs) {
+            const petID = doc.data().PetID;
+            let petDoc = await get_pet_by_id(petID);
+            let pet = format_pet_info(petDoc, petID);
+
+            matches.push(pet);
+        }
+
+        return matches;
+
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 // *** End Match model functions ***
@@ -121,20 +162,7 @@ app.get('/pets', async (req, res) => {
     // Add an entry for each document
     for (var pet_id of pet_collection){
         let petDocument = await get_pet_by_id(pet_id);
-        temp = {};
-
-        temp["id"] = pet_id;
-        temp["name"] = petDocument.Name;
-        temp["image"] = petDocument.imageURL;
-        temp["description"] = petDocument.Description;
-        temp["age"] = `${petDocument.Age} year(s) old`;
-        temp["breed"] = petDocument.Breed;
-        temp["availability"] = petDocument.Availability;
-        temp["disposition"] = {
-            goodWithAnimals: petDocument.Disposition[0],
-            goodWithChildren: petDocument.Disposition[1],
-            leashed: petDocument.Disposition[2]};
-        temp["species"] = petDocument.Species;
+        temp = format_pet_info(petDocument, pet_id);
         pets.push(temp);
     }
     res.send(pets);
@@ -180,6 +208,15 @@ app.get('/users', async (req, res) => {
     }
     res.send(users);
 });
+
+app.get('/match/:userID', async (req, res) => {
+    
+    const matches = await get_matches(req.params.userID);
+
+    if (matches) {
+        res.status(200).send(matches);
+    }
+})
 
 app.post('/match', async (req, res) => {
     const response = await post_new_match(req.body.userID, req.body.petID);

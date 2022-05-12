@@ -109,7 +109,7 @@ const Holder = styled(Box)(({cardUp}) => ({
   return (
     <>
       {!data && <Box sx={{display: "flex", justifyContent:"center"}}><CircularProgress size="200px" /></Box>}
-      {data && index < data.length && <Holder cardUp={cardUp}><PetCard user petInfo={data[index]} handleClose={handleClose} handleLike={handleLike} /></Holder>}
+      {data && index < data.length && <Holder cardUp={cardUp}><PetCard petInfo={data[index]} handleClose={handleClose} handleLike={handleLike} /></Holder>}
       {data && index >= data.length && <Box sx={{display: "flex", alignItems:'center', justifyContent:'center'}}><Typography variant='h3'>Out of pets!</Typography></Box>}
     </>
   );  

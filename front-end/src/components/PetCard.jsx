@@ -125,7 +125,7 @@ class PetCard extends Component {
                         </ListItem>
                     </List>
                     
-                    {this.props.user && <Button 
+                    {!this.props.user && <Button 
                         onClick={this.handleLike}
                         startIcon={<FavoriteIcon />}
                         color='success'
@@ -134,7 +134,7 @@ class PetCard extends Component {
                         >Like this {this.props.petInfo.species}
                     </Button>}
             
-                    {this.props.user && <Button
+                    {!this.props.user && <Button
                         onClick={this.handleDislike}
                         startIcon={<CloseIcon />}
                         color='error'
