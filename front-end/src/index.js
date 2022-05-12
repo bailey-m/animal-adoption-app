@@ -6,7 +6,8 @@ import {PageContainer} from './layouts/PageContainer';
 import {SearchPetProfilesPageContent} from './layouts/SearchPetProfilesPageContent';
 import {NewsPageContent} from './layouts/NewsPageContent';
 import PetCard from './components/PetCard';
-import NewsCard from './components/NewsCard';
+import UserProfilePage from './layouts/UserProfilePageContent';
+import LandingPageContent from './layouts/LandingPageContent';
 
 const testPetInfo = {
     name: 'NAME',
@@ -33,11 +34,11 @@ if(process.env.NODE_ENV == 'development') {
 ReactDOM.render(
     <BrowserRouter>
         <Routes>
-            <Route path='/' element={<PageContainer content={<HelloWorldContainer />} />} />
+            <Route path='/' element={<PageContainer content={<LandingPageContent />} />} />
             <Route path='/findamatch' element={<PageContainer content={<PetCard petInfo={testPetInfo} />} />} />
             <Route path='/pets' element={<PageContainer content={<SearchPetProfilesPageContent/>} />} />
             <Route path='/news' element={<PageContainer content={<NewsPageContent />} />} />
-            <Route path='/profile' element={<PageContainer content={<div>Hello World</div>} />} />
+            <Route path='/profile' element={<PageContainer content={<UserProfilePage />} />} />
         </Routes>
     </BrowserRouter>,
     document.getElementById('root')
