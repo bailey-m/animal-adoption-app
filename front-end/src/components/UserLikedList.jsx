@@ -19,7 +19,7 @@ export function UserLikedList(props) {
 
   return (
     <>
-      {!props.data && <CircularProgress />}
+      {!props.data && <CircularProgress sx={props.sx} />}
       {props.data && (
         <>
             <List

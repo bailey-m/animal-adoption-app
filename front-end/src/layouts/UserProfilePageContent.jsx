@@ -9,11 +9,12 @@ import Box from "@mui/material/Box";
 
 export default function UserProfilePage() {
   const [data, setData] = useState(null);
+  const [user, setUser] = useState('VqjvRWlVcTX64SO7bKPl');
 
   React.useEffect(() => {
     axios
       .get(
-        `${API_URL}/pets`
+        `${API_URL}/match/VqjvRWlVcTX64SO7bKPl`
       )
       .then((response) => {
         setData(response.data);

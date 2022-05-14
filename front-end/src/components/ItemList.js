@@ -28,7 +28,7 @@ export function ItemCard(props) {
 
   let info;
   for (var item of props.data) {
-    if (item.id == parseInt(props.itemId, 10)) {
+    if (item.id == props.itemId) {
       info = item;
       break;
     }
@@ -45,7 +45,7 @@ export function ItemCard(props) {
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
             { props.card === 'NewsCard' && <NewsCard news={info}/> }
-            { props.card === 'PetCard' && <PetCard petInfo={info} handleClose={props.onClose} /> }
+            { props.card === 'PetCard' && <PetCard user petInfo={info} handleClose={props.onClose} /> }
           </Typography>
         </Box>
       </Modal>

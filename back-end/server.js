@@ -1,8 +1,11 @@
 const express = require('express');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 const app = express();
 const {Firestore, QuerySnapshot} = require('@google-cloud/firestore');
 const firestore = new Firestore();
+
+app.use(bodyParser.json());
 app.use(cors());
 app.enable('trust proxy');
 
@@ -40,6 +43,26 @@ const get_pet_by_id = async(petId) => {
     } 
 }
 
+function format_pet_info (pet, id) {
+    temp = {};
+
+    temp["id"] = id;
+    temp["name"] = pet.Name;
+    temp["image"] = pet.imageURL;
+    temp["description"] = pet.Description;
+    temp["age"] = `${pet.Age} year(s) old`;
+    temp["breed"] = pet.Breed;
+    temp["availability"] = pet.Availability;
+    temp["disposition"] = {
+        goodWithAnimals: pet.Disposition[0],
+        goodWithChildren: pet.Disposition[1],
+        leashed: pet.Disposition[2]};
+    temp["species"] = pet.Species;
+
+    
+    return temp;
+}
+
 // *** End Pet model functions ***
 
 
@@ -61,6 +84,68 @@ const get_news_by_id = async(newsId) => {
 
 // *** End News model functions ***
 
+// *** Begin Users model functions ***
+
+async function get_user_by_id(userId) {
+    try {
+        let documentRef = firestore.doc('Users/' + userId);
+        return documentRef.get().then(documentSnapshot => {
+            if (documentSnapshot.exists) {
+                return documentSnapshot.data();
+            } else {
+                return 'No data retrieved';
+            }
+        })
+    } catch(err) {
+        console.log(err);
+    }
+}
+
+// *** End Users model functions ***
+
+// *** Begin Match model functions ***
+
+async function post_new_match(userID, petID) {
+    try {
+        const data = {
+            UserID: userID,
+            PetID: petID
+        }
+    
+        const response = await firestore.collection('Match').add(data);
+        return response;
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function get_matches(userID) {
+    try {
+        let matches = [];
+
+        const matchQuery = firestore.collection('Match').where('UserID', '==', userID);
+        const matchDocs = await matchQuery.get();
+
+        for (let doc of matchDocs.docs) {
+            const petID = doc.data().PetID;
+            let petDoc = await get_pet_by_id(petID);
+            let pet = format_pet_info(petDoc, petID);
+
+            matches.push(pet);
+        }
+
+        return matches;
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+// *** End Match model functions ***
+
+
+
 
 // *** Begin Pet controller functions ***
 app.get('/helloworld', async (req, res) => {
@@ -75,21 +160,9 @@ app.get('/pets', async (req, res) => {
     let pets = [];
 
     // Add an entry for each document
-    for (var pet_index in pet_collection){
-        let petDocument = await get_pet_by_id(pet_collection[pet_index]);
-        temp = {};
-        temp["id"] = pet_index;
-        temp["name"] = petDocument.Name;
-        temp["image"] = petDocument.imageURL;
-        temp["description"] = petDocument.Description;
-        temp["age"] = `${petDocument.Age} year(s) old`;
-        temp["breed"] = petDocument.Breed;
-        temp["availability"] = petDocument.Availability;
-        temp["disposition"] = {
-            goodWithAnimals: petDocument.Disposition[0],
-            goodWithChildren: petDocument.Disposition[1],
-            leashed: petDocument.Disposition[2]};
-        temp["species"] = petDocument.Species;
+    for (var pet_id of pet_collection){
+        let petDocument = await get_pet_by_id(pet_id);
+        temp = format_pet_info(petDocument, pet_id);
         pets.push(temp);
     }
     res.send(pets);
@@ -103,10 +176,11 @@ app.get('/news', async (req, res) => {
     let news = [];
 
     // Add an entry for each document
-    for (var news_index in news_collection){
-        let newsDocument = await get_news_by_id(news_collection[news_index]);
+    for (var news_id of news_collection){
+        let newsDocument = await get_news_by_id(news_id);
         temp = {};
-        temp["id"] = news_index;
+
+        temp["id"] = news_id;
         temp["title"] = newsDocument.Title;
         temp["imageURL"] = newsDocument.imageURL;
         temp["description"] = newsDocument.Description;
@@ -115,6 +189,42 @@ app.get('/news', async (req, res) => {
     }
     res.send(news);
 });
+
+
+app.get('/users', async (req, res) => {
+    let user_collection = await get_collection_ids('Users');
+    let users = [];
+
+    for (let user_id of user_collection) {
+        let userDocument = await get_user_by_id(user_id);
+
+        temp = {
+            id: user_id,
+            about_me: userDocument["About Me"],
+            admin: userDocument["Admin Bool"],
+            email: userDocument["Email"]
+        }
+        users.push(temp);
+    }
+    res.send(users);
+});
+
+app.get('/match/:userID', async (req, res) => {
+    
+    const matches = await get_matches(req.params.userID);
+
+    if (matches) {
+        res.status(200).send(matches);
+    }
+})
+
+app.post('/match', async (req, res) => {
+    const response = await post_new_match(req.body.userID, req.body.petID);
+    
+    if (response) {
+        res.status(200).send();
+    }
+})
 
 app.post('/pets', async (req, res) =>{
     await firestore.collection('Pets').add({
@@ -144,6 +254,7 @@ app.post('/news', async (req, res) =>{
         imageURL: 'https://upload.wikimedia.org/wikipedia/commons/f/f0/Mops_oct09_cropped2.jpg'
     });
 });
+
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

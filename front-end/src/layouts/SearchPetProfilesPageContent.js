@@ -35,7 +35,6 @@ export function SearchPetProfilesPageContent() {
   React.useEffect(() => {
     axios.get(`${API_URL}/pets`)
     .then((response) => {
-      console.log(response);
       setData(response.data);
     })
     .catch((error) => {

@@ -38,7 +38,7 @@ class PetCard extends Component {
     }
 
     handleLike = () => {
-        this.props.handleClose()
+        this.props.handleLike()
     }
     
 
@@ -125,13 +125,23 @@ class PetCard extends Component {
                         </ListItem>
                     </List>
                     
-                    <Button onClick={this.handleLike} startIcon={<FavoriteIcon />} color='success' variant='contained' sx={{gridRow:'9', gridColumn:'span 3'}}>
-                        Like this {this.props.petInfo.species}
-                    </Button>
+                    {!this.props.user && <Button 
+                        onClick={this.handleLike}
+                        startIcon={<FavoriteIcon />}
+                        color='success'
+                        variant='contained'
+                        sx={{gridRow:'9', gridColumn:'span 3'}}
+                        >Like this {this.props.petInfo.species}
+                    </Button>}
             
-                    <Button onClick={this.handleDislike} startIcon={<CloseIcon />} color='error' variant='contained' sx={{gridRow:'9', gridColumn:'span 3'}}>
-                        Not for me
-                    </Button>
+                    {!this.props.user && <Button
+                        onClick={this.handleDislike}
+                        startIcon={<CloseIcon />}
+                        color='error'
+                        variant='contained'
+                        sx={{gridRow:'9', gridColumn:'span 3'}}
+                        >Not for me
+                    </Button>}
                 </Box>
             </CardContent>
         </Card>);
