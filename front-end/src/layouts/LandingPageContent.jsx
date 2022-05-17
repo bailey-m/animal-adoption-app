@@ -2,11 +2,12 @@ import { Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import { Box } from '@mui/system';
 import {Link} from 'react-router-dom';
+import { useOktaAuth } from '@okta/okta-react';
 import NewspaperOutlinedIcon from '@mui/icons-material/NewspaperOutlined';
 import ListAltOutlinedIcon from '@mui/icons-material/ListAltOutlined';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import ListAltOutlined from '@mui/icons-material/ListAltOutlined';
 
 const linkStyle = {
@@ -31,7 +32,30 @@ const logoStyle = {
 
 
 export default function LandingPageContent(props) {
+    const { authState, oktaAuth } = useOktaAuth();
+    const [userInfo, setUserInfo] = useState(null);
+  
+    useEffect(() => {
+      if (!authState || !authState.isAuthenticated) {
+        // When user isn't authenticated, forget any user info
+        setUserInfo(null);
+      } else {
+        oktaAuth.getUser().then((info) => {
+          setUserInfo(info);
+        });
+      }
+    }, [authState, oktaAuth]); // Update if authState changes
+  
+    const login = async () => {
+      await oktaAuth.signInWithRedirect();
+    };
 
+    if (!authState) {
+        return (
+          <div>Loading...</div>
+        );
+    }
+  
     return (
         <div>
             <Typography align='center' variant='h1'>Animal House</Typography>
@@ -68,6 +92,20 @@ export default function LandingPageContent(props) {
                     </Button>
                 </Link>
 
+                { authState.isAuthenticated && !userInfo && 
+                    <div>Loading user information...</div>
+                }
+
+                {authState.isAuthenticated && userInfo && 
+                    (
+                        <p> Welcome back, {userInfo.name} </p>
+                    )
+                }
+
+                {!authState.isAuthenticated && (
+                    <p> You are not currently logged in </p>
+                )}
+            <Button id="login-button" primary onClick={login}>Login</Button>
             </Box>
         </div>
     );
