@@ -1,8 +1,8 @@
-import * as React from 'react';
+import React, {useState, useEffect} from 'react';
+import { useOktaAuth } from '@okta/okta-react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
-import {useState} from 'react';
 import { ItemList } from '../components/ItemList';
 import axios from 'axios';
 import {API_URL} from '../index';
@@ -32,7 +32,20 @@ export function SearchPetProfilesPageContent() {
   const handleCardOpen = () => setCardOpen(true);
   const handleCardClose = () => setCardOpen(false);
 
-  React.useEffect(() => {
+  const { authState, oktaAuth } = useOktaAuth();
+  const [userInfo, setUserInfo] = useState(null);
+
+  useEffect(() => {
+    if (!authState || !authState.isAuthenticated) {
+      setUserInfo(null);
+    } else {
+      oktaAuth.getUser().then((info) => {
+        setUserInfo(info);
+      });
+    }
+  }, [authState, oktaAuth]); 
+
+  useEffect(() => {
     axios.get(`${API_URL}/pets`)
     .then((response) => {
       setData(response.data);
@@ -42,12 +55,23 @@ export function SearchPetProfilesPageContent() {
     });
   }, []);
 
+  
+  const renderAddNewPetButton = () => {
+    if (authState && authState.isAuthenticated && userInfo && userInfo.userType == 'admin') {
+      return (
+        <>
+          <Button onClick={handleCardOpen} variant='contained'>+ Add Pet</Button>
+          <NewPetFormCard open={cardOpen} onClose={handleCardClose}/>
+        </>
+      )
+    }
+  }
+
   // TODO insert search/filters with Search button that queries based on filters
   return (
     <>
     <Box sx={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
-      <Button onClick={handleCardOpen} variant='contained'>+ Add Pet</Button>
-      <NewPetFormCard open={cardOpen} onClose={handleCardClose}/>
+      {renderAddNewPetButton()}
     </Box>
     <Box>
       <ItemList sx={{margin: 'auto'}} data={data} card='PetCard'/>

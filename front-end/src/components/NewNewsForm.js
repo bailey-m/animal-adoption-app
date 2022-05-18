@@ -31,7 +31,7 @@ export function NewNewsForm(props) {
 
     return (
         <Box sx={style}>
-            <Typography>Add New Pet</Typography>
+            <Typography>Add News Post</Typography>
             <TextField id="outlined-basic" label="Title" variant="outlined" value={title} sx={{width: 200 }} 
                 onChange={(e) => {setTitle(e.target.value);}}/>
             <TextField id="outlined-basic" label="Description" variant="outlined" multiline rows={2} value={description} 

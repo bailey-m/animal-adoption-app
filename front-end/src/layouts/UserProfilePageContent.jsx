@@ -17,14 +17,13 @@ export default function UserProfilePage() {
 
   React.useEffect(() => {
     if (!authState || !authState.isAuthenticated) {
-      // When user isn't authenticated, forget any user info
       setUserInfo(null);
     } else {
       oktaAuth.getUser().then((info) => {
         setUserInfo(info);
       });
     }
-  }, [authState, oktaAuth]); // Update if authState changes
+  }, [authState, oktaAuth]);
 
   console.log(userInfo)
 
@@ -52,8 +51,8 @@ export default function UserProfilePage() {
           margin: 'auto'
         }}
       >
-        <Typography sx={{gridRow: '1', gridColumn:'span 4'}} variant='h2'>User Name</Typography>
-        <Typography sx={{gridRowStart: '3', gridColumn:'span 2'}} variant='body1'>{userInfo ? userInfo.name : ''}</Typography>
+        <Typography sx={{gridRow: '1', gridColumn:'span 4'}} variant='h3'>{userInfo ? userInfo.name : ''}</Typography>
+        <Typography sx={{gridRowStart: '3', gridColumn:'span 2'}} variant='body1'></Typography>
         <Typography sx={{gridRowStart: '2', gridColumn:'3/5' }} align="center" variant="h3">Liked Pets</Typography>
         <UserLikedList sx={{gridRowStart: '3', gridColumn:'3/5', margin: "auto" }} data={data} card="PetCard" />
       </Box>

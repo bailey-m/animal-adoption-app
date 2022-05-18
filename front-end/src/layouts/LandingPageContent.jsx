@@ -50,6 +50,10 @@ export default function LandingPageContent(props) {
       await oktaAuth.signInWithRedirect();
     };
 
+    const logout = async () => {
+        await oktaAuth.signOut();
+    }
+
     if (!authState) {
         return (
           <div>Loading...</div>
@@ -58,6 +62,21 @@ export default function LandingPageContent(props) {
   
     return (
         <div>
+            <Box sx={{display: 'flex', justifyContent: 'flex-end', width: '100%', gap: '10px'}}>
+                { authState.isAuthenticated && !userInfo && 
+                    <div>Loading user information...</div>
+                }
+
+                {authState.isAuthenticated && userInfo && 
+                    (
+                        <p> Welcome back, {userInfo.name} </p>
+                    )
+                }
+                { !authState.isAuthenticated 
+                    ? (<Button id="login-button" variant={'contained'} onClick={login}>Login</Button>) 
+                    : (<Button variant={'contained'} onClick={logout}>Logout</Button>) 
+                }
+            </Box>
             <Typography align='center' variant='h1'>Animal House</Typography>
             <Typography align='center' variant='h2'>Find Your Forever Companion</Typography>
         
@@ -88,24 +107,12 @@ export default function LandingPageContent(props) {
                 </Link>
                 <Link to='/profile' style={linkStyle} sx={{gridColumn:'4'}}>
                     <Button variant='contained' startIcon={<PersonOutlineOutlinedIcon sx={iconStyle} />} >
-                        User Profile / Login
+                        User Profile
                     </Button>
                 </Link>
 
-                { authState.isAuthenticated && !userInfo && 
-                    <div>Loading user information...</div>
-                }
-
-                {authState.isAuthenticated && userInfo && 
-                    (
-                        <p> Welcome back, {userInfo.name} </p>
-                    )
-                }
-
-                {!authState.isAuthenticated && (
-                    <p> You are not currently logged in </p>
-                )}
-            <Button id="login-button" primary onClick={login}>Login</Button>
+                
+            
             </Box>
         </div>
     );
