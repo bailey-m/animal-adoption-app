@@ -64,13 +64,11 @@ export default function LandingPageContent(props) {
         <div>
             <Box sx={{display: 'flex', justifyContent: 'flex-end', width: '100%', gap: '10px'}}>
                 { authState.isAuthenticated && !userInfo && 
-                    <div>Loading user information...</div>
+                    <p>Loading user information...</p>
                 }
 
                 {authState.isAuthenticated && userInfo && 
-                    (
-                        <p> Welcome back, {userInfo.name} </p>
-                    )
+                    <p> Welcome back, {userInfo.name} </p>
                 }
                 { !authState.isAuthenticated 
                     ? (<Button id="login-button" variant={'contained'} onClick={login}>Login</Button>) 
