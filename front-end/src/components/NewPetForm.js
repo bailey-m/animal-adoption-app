@@ -15,6 +15,7 @@ import Checkbox from '@mui/material/Checkbox';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { Input } from '@mui/material';
+import { HelloWorldContainer } from './HelloWorldContainer';
 
 
 const species = [
@@ -77,8 +78,8 @@ const style = {
     gap: '10px'
   };
 
-
   // Sending info from textfield adapted from https://www.geeksforgeeks.org/how-to-use-textfield-component-in-reactjs/
+  // Image upload adapted from https://medium.com/@ibamibrhm/custom-upload-button-image-preview-and-image-upload-with-react-hooks-a7977618ee8c
 export function NewPetForm(props) {
 
     const [name, setName] = useState("");
@@ -89,18 +90,32 @@ export function NewPetForm(props) {
     const [good_with_animals, setGoodWithAnimals] = useState("");
     const [good_with_children, setGoodWithChildren] = useState("");
     const [must_be_leashed, setMustBeLeashed] = useState("");
+    const [picture, setPicture] = useState({preview: "", raw: ""});
 
     return (
         <Box sx={style}>
+            <FormControl sx={{width: 400}}>
+            <form onSubmit = {() => {axios.post(`${API_URL}/pets`, null, {params: {
+                Name: name,
+                Age: age, 
+                Breed: breed, 
+                Species: animal, 
+                Description: description,
+                Good_With_Animals: good_with_animals,
+                Good_With_Children: good_with_children,
+                Must_Be_Leashed: must_be_leashed,
+                }}); window.location.reload(false)}}>
+
             <Typography>Add New Pet</Typography>
-            <TextField id="outlined-basic" label="Name" variant="outlined" value={name} sx={{width: 200 }} 
+            <TextField required id="outlined-basic" label="Name" variant="outlined" value={name} sx={{width: 200 }} 
                 onChange={(e) => {setName(e.target.value);}}/>
-            <TextField id="outlined-basic" label="Age" variant="outlined" value={age} sx={{width: 200 }} 
+            <TextField required id="outlined-basic" label="Age" variant="outlined" type='number' value={age} sx={{width: 200 }} 
                 onChange={(e) => {setAge(e.target.value);}}/>
 
             <FormControl sx={{width: 200}}>
                 <InputLabel id="demo-simple-select-label">Species</InputLabel>
                 <Select
+                required
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 label="Species"
@@ -116,7 +131,7 @@ export function NewPetForm(props) {
                 <InputLabel htmlFor="grouped-select">Breed</InputLabel>
                 <Select defaultValue="" id="grouped-select" label="Grouping" value={breed} 
                     onChange={(e) => {setBreed(e.target.value);}}>
-                <MenuItem value={null}>Not Applicable</MenuItem>
+                <MenuItem value="">Not Applicable</MenuItem>
                 <ListSubheader>Dogs</ListSubheader>
                 {dogBreeds.map(breed => 
                     <MenuItem value={breed}>{breed}</MenuItem>
@@ -132,22 +147,19 @@ export function NewPetForm(props) {
             <FormControlLabel control={<Checkbox checked={good_with_children} onChange={(e) => {setGoodWithChildren(e.target.checked);}}/>} label="Good With Children" />
             <FormControlLabel control={<Checkbox checked={must_be_leashed} onChange={(e) => {setMustBeLeashed(e.target.checked);}}/>} label="Must Be Leashed At All Times" />
             </FormGroup>
-            <TextField id="outlined-basic" label="Description" variant="outlined" multiline rows={2} value={description} 
+            <TextField id="outlined-basic" label="Description" variant="outlined" multiline rows={2} value={description} sx={{width: 400 }}
                 onChange={(e) => {setDescription(e.target.value);}}/>
             <Typography></Typography>
             <Typography></Typography>
             <Typography>Upload Photo</Typography>
-            <Input type="file"/>
-            <Button variant='contained' onClick = {() => {axios.post(`${API_URL}/pets`, null, {params: {
-                Name: name,
-                Age: age, 
-                Breed: breed, 
-                Species: animal, 
-                Description: description,
-                Good_With_Animals: good_with_animals,
-                Good_With_Children: good_with_children,
-                Must_Be_Leashed: must_be_leashed,
-                }}); window.location.reload(false)}}>Add Pet</Button>
+            <InputLabel htmlFor="upload_button">{picture.preview ? (<img src={picture.preview} alt="dummy" width="100" height="100" />) : ''}</InputLabel>
+            <Input type="file" id="upload_button" onChange={(e) => {setPicture({
+                preview: URL.createObjectURL(e.target.files[0]),
+                raw: e.target.files[0]});}}/>
+                
+            <Button variant='contained' type='submit'>Add Pet</Button>
+            </form>
+            </FormControl>
         </Box>
     )
 }
