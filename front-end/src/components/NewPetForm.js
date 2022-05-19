@@ -152,14 +152,13 @@ export function NewPetForm(props) {
             <Typography></Typography>
             <Typography></Typography>
             <Typography>Upload Photo</Typography>
-            <InputLabel htmlFor="upload_button">{picture.preview ? (<img src={picture.preview} alt="dummy" width="100" height="100" />) : ''}</InputLabel>
             <Input type="file" id="upload_button" onChange={(e) => {setPicture({
                 preview: URL.createObjectURL(e.target.files[0]),
                 raw: e.target.files[0]});}}/>
-                
             <Button variant='contained' type='submit'>Add Pet</Button>
             </form>
             </FormControl>
+            <InputLabel htmlFor="upload_button">{picture.preview ? (<img src={picture.preview} alt="dummy" width="100" height="100" />) : ''}</InputLabel>
         </Box>
     )
 }
