@@ -12,7 +12,7 @@ import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined
 import PetsIcon from '@mui/icons-material/Pets';
 import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/material';
-import { buttonTheme } from '../theme';
+import { textTheme } from '../theme';
 
 
 const drawerWidth = 125;
@@ -39,7 +39,7 @@ const logoStyle = {
 
 export function NavBar() {
   return (
-    <ThemeProvider theme={buttonTheme}>
+    <ThemeProvider theme={textTheme}>
       <Box sx={{ display: 'flex' }}>
         <Drawer
           PaperProps={{

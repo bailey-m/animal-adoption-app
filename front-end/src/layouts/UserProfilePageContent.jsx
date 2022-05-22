@@ -3,8 +3,8 @@ import axios from "axios";
 import { API_URL } from "../index";
 import { useState } from "react";
 import { UserLikedList } from "../components/UserLikedList";
-import { Typography } from "@mui/material";
-import Box from "@mui/material/Box";
+import { Typography, ThemeProvider, Box } from "@mui/material";
+import { headingTheme, textTheme } from '../theme';
 
 
 export default function UserProfilePage() {
@@ -32,12 +32,15 @@ export default function UserProfilePage() {
           gap: 0.5,
           gridTemplateColumns: 'repeat(4, 1fr)',
           gridTemplateRows: 'auto',
-          margin: 'auto'
         }}
       >
-        <Typography sx={{gridRow: '1', gridColumn:'span 4'}} variant='h2'>User Name</Typography>
-        <Typography sx={{gridRowStart: '3', gridColumn:'span 2'}} variant='body1'>User info goes here</Typography>
-        <Typography sx={{gridRowStart: '2', gridColumn:'3/5' }} align="center" variant="h3">Liked Pets</Typography>
+        <ThemeProvider theme={headingTheme}>
+          <Typography sx={{gridRow: '1', gridColumn:'span 4'}} align="center" variant='h2'>User Name</Typography>
+          <Typography sx={{gridRowStart: '2', gridColumn:'3/5' }} align="center" variant="h3">Liked Pets</Typography>
+        </ThemeProvider>
+        <ThemeProvider theme={textTheme}>
+          <Typography sx={{gridRowStart: '3', gridColumn:'span 2'}} variant='body1'>User info goes here</Typography>
+        </ThemeProvider>
         <UserLikedList sx={{gridRowStart: '3', gridColumn:'3/5', margin: "auto" }} data={data} card="PetCard" />
       </Box>
     </div>

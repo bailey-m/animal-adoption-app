@@ -9,7 +9,7 @@ export const headingTheme = createTheme({
     },
 });
 
-export const buttonTheme = createTheme({
+export const textTheme = createTheme({
     typography: {
         fontFamily: [
             'Special Elite',

@@ -8,7 +8,7 @@ import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined
 import * as React from 'react';
 import ListAltOutlined from '@mui/icons-material/ListAltOutlined';
 import { ThemeProvider } from '@mui/material/styles';
-import { headingTheme, buttonTheme } from '../theme';
+import { headingTheme, textTheme } from '../theme';
 
 const linkStyle = {
     textDecoration: "none",
@@ -49,7 +49,7 @@ export default function LandingPageContent(props) {
                     mt: 10
                 }}
                 >
-                <ThemeProvider theme={buttonTheme}>
+                <ThemeProvider theme={textTheme}>
                     <Link to='/findamatch' style={linkStyle} sx={{gridColumn:'1'}}>
                         <Button  variant='contained' startIcon={<FavoriteBorderOutlinedIcon sx={iconStyle} />} >
                             <Typography variant='h6'>

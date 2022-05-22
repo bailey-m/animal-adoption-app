@@ -5,7 +5,7 @@ import { API_URL } from '../index';
 import { CircularProgress, keyframes, Box, Typography, ThemeProvider } from '@mui/material';
 import styled from '@mui/material/styles/styled';
 import { flexbox } from '@mui/system';
-import { headingTheme, buttonTheme } from '../theme';
+import { headingTheme, textTheme } from '../theme';
 
 // Exit animation
 const slideOutBottom = keyframes`
@@ -125,7 +125,7 @@ const Holder = styled(Box)(({cardUp}) => ({
           </Holder>}
         {data && index >= data.length && 
           <Box sx={{display:"flex", alignItems:"flex-end", height:"15rem"}}>
-            <ThemeProvider theme={buttonTheme}>
+            <ThemeProvider theme={textTheme}>
               <Typography variant='h3'>Out of pets!</Typography>
             </ThemeProvider>
           </Box>}

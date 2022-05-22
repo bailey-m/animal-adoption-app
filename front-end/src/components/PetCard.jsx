@@ -14,6 +14,8 @@ import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
+import { ThemeProvider } from '@mui/material';
+import { textTheme } from '../theme';
 
 /* 
 PASS IN DATABASE INFORMATION AS PROP JSON
@@ -74,6 +76,7 @@ class PetCard extends Component {
                 alt={this.props.petInfo.name}
             />
             <CardContent >
+            <ThemeProvider theme={textTheme}>
                 <Box sx={{
                     display: 'grid',
                     gap: .5,
@@ -143,6 +146,7 @@ class PetCard extends Component {
                         >Not for me
                     </Button>}
                 </Box>
+                </ThemeProvider>
             </CardContent>
         </Card>);
     }
