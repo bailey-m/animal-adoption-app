@@ -8,6 +8,8 @@ import axios from 'axios';
 import NewsCard from '../components/NewsCard';
 import {API_URL} from '../index';
 import { NewNewsForm } from '../components/NewNewsForm';
+import { ThemeProvider, Typography } from '@mui/material';
+import { headingTheme } from '../theme';
 
 export function NewNewsFormCard(props) {  
 
@@ -46,6 +48,9 @@ export function NewsPageContent() {
 
   return (
     <>
+    <ThemeProvider theme={headingTheme}>
+        <Typography variant='h1'>Recent News</Typography>
+      </ThemeProvider>
     <Box sx={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
       <Button onClick={handleCardOpen} variant='contained'>+ Add News Post</Button>
       <NewNewsFormCard open={cardOpen} onClose={handleCardClose}/>

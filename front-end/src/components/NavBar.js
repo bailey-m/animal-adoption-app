@@ -11,6 +11,8 @@ import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlin
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import PetsIcon from '@mui/icons-material/Pets';
 import Typography from '@mui/material/Typography';
+import { ThemeProvider } from '@mui/material';
+import { buttonTheme } from '../theme';
 
 
 const drawerWidth = 125;
@@ -37,57 +39,60 @@ const logoStyle = {
 
 export function NavBar() {
   return (
-    <Box sx={{ display: 'flex' }}>
-      <Drawer
-        PaperProps={{
-            sx: {
-              backgroundColor: '#2196f3'
-            }
-        }}
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          '& .MuiDrawer-paper': {
+    <ThemeProvider theme={buttonTheme}>
+      <Box sx={{ display: 'flex' }}>
+        <Drawer
+          PaperProps={{
+              sx: {
+                backgroundColor: '#2196f3'
+              }
+          }}
+          sx={{
             width: drawerWidth,
-            boxSizing: 'border-box',
-          }
-        }}
-        variant="permanent"
-        anchor="left"
-      >
-        <Link to='/'>
-            <ListItem style={listItemStyle} button>
-                <PetsIcon sx={logoStyle}/>
-            </ListItem>
-        </Link>
-        <Toolbar/>
-        <List>
-            <Link to='/findamatch' style={linkStyle}>
-                <ListItem sx={listItemStyle} button>
-                    <FavoriteBorderOutlinedIcon sx={iconStyle}/>
-                    <Typography variant='subtitle2'>Find a Match</Typography>
-                </ListItem>
-            </Link>
-            <Link to='/pets' style={linkStyle}>
-                <ListItem sx={listItemStyle} button>
-                    <ListAltOutlinedIcon sx={iconStyle}/>
-                    <Typography variant='subtitle2'>Search Pets</Typography>
-                </ListItem>
-            </Link>
-            <Link to='/news' style={linkStyle}>
-                <ListItem sx={listItemStyle} button>
-                    <NewspaperOutlinedIcon sx={iconStyle}/>
-                    <Typography variant='subtitle2'>Recent News</Typography>
-                </ListItem>
-            </Link>
-            <Link to='/profile' style={linkStyle}>
-                <ListItem sx={listItemStyle} button>
-                    <PersonOutlineOutlinedIcon sx={iconStyle}/>
-                    <Typography variant='subtitle2'>User Profile</Typography>
-                </ListItem>
-            </Link>
-        </List>
-      </Drawer>
-    </Box>
+            flexShrink: 0,
+            '& .MuiDrawer-paper': {
+              width: drawerWidth,
+              boxSizing: 'border-box',
+            }
+          }}
+          variant="permanent"
+          anchor="left"
+        >
+          <Link to='/' style={linkStyle}>
+              <ListItem style={listItemStyle} button>
+                  <PetsIcon sx={logoStyle}/>
+                  <Typography variant='caption'>Animal House</Typography>
+              </ListItem>
+          </Link>
+          <Toolbar/>
+          <List>
+              <Link to='/findamatch' style={linkStyle}>
+                  <ListItem sx={listItemStyle} button>
+                      <FavoriteBorderOutlinedIcon sx={iconStyle}/>
+                      <Typography variant='subtitle2'>Find a Match</Typography>
+                  </ListItem>
+              </Link>
+              <Link to='/pets' style={linkStyle}>
+                  <ListItem sx={listItemStyle} button>
+                      <ListAltOutlinedIcon sx={iconStyle}/>
+                      <Typography variant='subtitle2'>Search Pets</Typography>
+                  </ListItem>
+              </Link>
+              <Link to='/news' style={linkStyle}>
+                  <ListItem sx={listItemStyle} button>
+                      <NewspaperOutlinedIcon sx={iconStyle}/>
+                      <Typography variant='subtitle2'>Recent News</Typography>
+                  </ListItem>
+              </Link>
+              <Link to='/profile' style={linkStyle}>
+                  <ListItem sx={listItemStyle} button>
+                      <PersonOutlineOutlinedIcon sx={iconStyle}/>
+                      <Typography variant='subtitle2'>User Profile</Typography>
+                  </ListItem>
+              </Link>
+          </List>
+        </Drawer>
+      </Box>
+    </ThemeProvider>
   );
 }

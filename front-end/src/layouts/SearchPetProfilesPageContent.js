@@ -7,6 +7,8 @@ import { ItemList } from '../components/ItemList';
 import axios from 'axios';
 import {API_URL} from '../index';
 import { NewPetForm } from '../components/NewPetForm';
+import { ThemeProvider, Typography } from '@mui/material';
+import { headingTheme } from '../theme';
 
 
 export function NewPetFormCard(props) {  
@@ -45,7 +47,11 @@ export function SearchPetProfilesPageContent() {
   // TODO insert search/filters with Search button that queries based on filters
   return (
     <>
+      <ThemeProvider theme={headingTheme}>
+        <Typography variant='h1'>Search Pets</Typography>
+      </ThemeProvider>
     <Box sx={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
+      
       <Button onClick={handleCardOpen} variant='contained'>+ Add Pet</Button>
       <NewPetFormCard open={cardOpen} onClose={handleCardClose}/>
     </Box>

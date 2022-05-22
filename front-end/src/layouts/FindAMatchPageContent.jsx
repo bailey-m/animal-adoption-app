@@ -2,9 +2,10 @@ import * as React from 'react';
 import PetCard from '../components/PetCard';
 import axios from 'axios';
 import { API_URL } from '../index';
-import { CircularProgress, keyframes, Box, Typography } from '@mui/material';
+import { CircularProgress, keyframes, Box, Typography, ThemeProvider } from '@mui/material';
 import styled from '@mui/material/styles/styled';
 import { flexbox } from '@mui/system';
+import { headingTheme, buttonTheme } from '../theme';
 
 // Exit animation
 const slideOutBottom = keyframes`
@@ -106,11 +107,30 @@ const Holder = styled(Box)(({cardUp}) => ({
   display: "flex"
 }));
 
+
   return (
     <>
-      {!data && <Box sx={{display: "flex", justifyContent:"center"}}><CircularProgress size="200px" /></Box>}
-      {data && index < data.length && <Holder cardUp={cardUp}><PetCard petInfo={data[index]} handleClose={handleClose} handleLike={handleLike} /></Holder>}
-      {data && index >= data.length && <Box sx={{display: "flex", alignItems:'center', justifyContent:'center'}}><Typography variant='h3'>Out of pets!</Typography></Box>}
+      <Box sx={{display: "flex", justifyContent:"center", flexWrap:"wrap"}}>
+        <ThemeProvider theme={headingTheme}>
+          <Typography variant='h1'>Find A Match</Typography>
+        </ThemeProvider>
+        <Box sx={{flexBasis:"100%", height:"0"}}></Box>
+        {!data && 
+          <Box sx={{display:"flex", justifyContent:"center"}}>
+            <CircularProgress size="200px" />
+          </Box>}
+        {data && index < data.length && 
+          <Holder cardUp={cardUp}>
+            <PetCard petInfo={data[index]} handleClose={handleClose} handleLike={handleLike} />
+          </Holder>}
+        {data && index >= data.length && 
+          <Box sx={{display:"flex", alignItems:"flex-end", height:"15rem"}}>
+            <ThemeProvider theme={buttonTheme}>
+              <Typography variant='h3'>Out of pets!</Typography>
+            </ThemeProvider>
+          </Box>}
+      </Box>
+      
     </>
   );  
 }
