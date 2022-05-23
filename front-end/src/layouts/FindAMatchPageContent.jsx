@@ -61,43 +61,46 @@ export function FindAMatchPageContent(props) {
 
 
   React.useEffect(() => {
-    if (!authState || !authState.isAuthenticated) {
-      setUser(null);
-    } else {
-      oktaAuth.getUser().then((info) => {
-        setUser(info);
-      });
-    }
-  }, [authState, oktaAuth]);
-
-    React.useEffect(() => {
-      if (user) {
-        axios
-        .get(
-          `${API_URL}/match/${user.sub}`
-        )
-        .then((response) => {
-          setMatches(response.data);
-        })
-        .catch((error) => {
-          console.log(error);
+    (async() => {
+      if (!authState || !authState.isAuthenticated) {
+        setUser(null);
+      } else {
+        await oktaAuth.getUser().then(async(info) => {
+          setUser(info);
+          let userMatches = await getUserMatches(info);
+          await getPets(userMatches);
         });
       }
-    },[user]);
+    })();
+  }, [authState, oktaAuth]);
 
-    React.useEffect(() => {
-      axios.get(`${API_URL}/pets`)
-      .then((response) => {
-        let result = response.data;
-        for (let match of matches) {
-          result = result.filter(pet => pet.id != match.id);
-        }
-        setData(result);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    }, [matches]);
+  const getUserMatches = async(user) => {
+    return await axios
+    .get(
+      `${API_URL}/match/${user.sub}`
+    )
+    .then((response) => {
+      setMatches(response.data);
+      return response.data;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+  
+  const getPets = async(userMatches) => {
+    await axios.get(`${API_URL}/pets`)
+    .then((response) => {
+      let result = response.data;
+      for (let match of userMatches) {
+        result = result.filter(pet => pet.id != match.id);
+      }
+      setData(result);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
 
   const handleLike = async () => {
     const match = {
