@@ -123,7 +123,6 @@ function PetCard(props) {
                     
                     <Typography align='center' variant='subtitle1' sx={{gridRow:'2', gridColumnStart:'1', gridColumnEnd:'4' }} >{props.petInfo.age}</Typography>
                          
-                    {/* CHANGE COLOR??????????????????*/ }
                     <Divider orientation='vertical' sx={{gridRow:'2', gridColumn:'3'}} />    
                         
                     <Typography align='center' variant='subtitle1' sx={{gridRow:'2', gridColumnStart:'4', gridColumn:'span 3'}} >{props.petInfo.breed}</Typography>                   

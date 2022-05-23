@@ -42,6 +42,13 @@ function setAnimation(cardUp) {
   }
 }
 
+// Box to apply animations to
+const Holder = styled(Box)(({cardUp}) => ({
+  animation: setAnimation(cardUp),
+  alignItems: "center",
+  justifyContent: "center",
+  display: "flex"
+}));
 
 
 export function FindAMatchPageContent(props) {
@@ -49,8 +56,9 @@ export function FindAMatchPageContent(props) {
   const [user, setUser] = React.useState(null);
   const [index, setIndex] = React.useState(0);
   const [cardUp, setCardUp] = React.useState(true);
+  const [matches, setMatches] = React.useState(null);
   const { authState, oktaAuth } = useOktaAuth();
-  
+
 
   React.useEffect(() => {
     if (!authState || !authState.isAuthenticated) {
@@ -62,16 +70,34 @@ export function FindAMatchPageContent(props) {
     }
   }, [authState, oktaAuth]);
 
-  React.useEffect(() => {
+    React.useEffect(() => {
+      if (user) {
+        axios
+        .get(
+          `${API_URL}/match/${user.sub}`
+        )
+        .then((response) => {
+          setMatches(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      }
+    },[user]);
+
+    React.useEffect(() => {
       axios.get(`${API_URL}/pets`)
       .then((response) => {
-        setData(response.data);
-        
+        let result = response.data;
+        for (let match of matches) {
+          result = result.filter(pet => pet.id != match.id);
+        }
+        setData(result);
       })
       .catch((error) => {
         console.log(error);
       });
-    });
+    }, [matches]);
 
   const handleLike = async () => {
     const match = {
@@ -95,13 +121,7 @@ export function FindAMatchPageContent(props) {
     }, 600)
   }
 
-  // Box to apply animations to
-  const Holder = styled(Box)(({cardUp}) => ({
-    animation: setAnimation(cardUp),
-    alignItems: "center",
-    justifyContent: "center",
-    display: "flex"
-  }));
+  
 
   return (
     <>
