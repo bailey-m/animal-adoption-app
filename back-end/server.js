@@ -123,7 +123,7 @@ async function post_new_match(userID, petID) {
 async function get_matches(userID) {
     try {
         let matches = [];
-
+        console.log(`userID: ${userID}`);
         const matchQuery = firestore.collection('Match').where('UserID', '==', userID);
         const matchDocs = await matchQuery.get();
 

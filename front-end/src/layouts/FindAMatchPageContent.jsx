@@ -4,7 +4,7 @@ import axios from 'axios';
 import { API_URL } from '../index';
 import { CircularProgress, keyframes, Box, Typography } from '@mui/material';
 import styled from '@mui/material/styles/styled';
-import { flexbox } from '@mui/system';
+import { useOktaAuth } from '@okta/okta-react';
 
 // Exit animation
 const slideOutBottom = keyframes`
@@ -33,6 +33,7 @@ const slideInTop = keyframes`
   }`;
 
 
+
 function setAnimation(cardUp) {
   if (cardUp) {
     return `${slideInTop} 0.6s cubic-bezier(0.250, 0.460, 0.450, 0.940) both`;
@@ -48,19 +49,18 @@ export function FindAMatchPageContent(props) {
   const [user, setUser] = React.useState(null);
   const [index, setIndex] = React.useState(0);
   const [cardUp, setCardUp] = React.useState(true);
+  const { authState, oktaAuth } = useOktaAuth();
+  
 
-  let componentToShow;
-
-  // FOR TESTING ------------- CHANGE LATER
   React.useEffect(() => {
-    axios.get(`${API_URL}/users`)
-    .then((response) => {
-      setUser(response.data[0]);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-  }, []);
+    if (!authState || !authState.isAuthenticated) {
+      setUser(null);
+    } else {
+      oktaAuth.getUser().then((info) => {
+        setUser(info);
+      });
+    }
+  }, [authState, oktaAuth]);
 
   React.useEffect(() => {
       axios.get(`${API_URL}/pets`)
@@ -71,23 +71,21 @@ export function FindAMatchPageContent(props) {
       .catch((error) => {
         console.log(error);
       });
-    }, []);
+    });
 
   const handleLike = async () => {
     const match = {
-      userID: user.id,
+      userID: user.sub,
       petID: data[index].id
     }
-    
+
     const response = await axios.post(`${API_URL}/match`, match)
-    
     if (response.status === 200) {
       handleClose();
     } else {
       alert('Something went wrong!');
     }
   }
-  
 
   const handleClose = () => {
     setCardUp(false);
@@ -95,16 +93,15 @@ export function FindAMatchPageContent(props) {
       setIndex( prev => prev + 1);
       setCardUp(true);
     }, 600)
-    
   }
 
   // Box to apply animations to
-const Holder = styled(Box)(({cardUp}) => ({
-  animation: setAnimation(cardUp),
-  alignItems: "center",
-  justifyContent: "center",
-  display: "flex"
-}));
+  const Holder = styled(Box)(({cardUp}) => ({
+    animation: setAnimation(cardUp),
+    alignItems: "center",
+    justifyContent: "center",
+    display: "flex"
+  }));
 
   return (
     <>

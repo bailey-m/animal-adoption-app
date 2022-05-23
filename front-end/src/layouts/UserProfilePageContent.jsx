@@ -10,7 +10,7 @@ import Box from "@mui/material/Box";
 
 export default function UserProfilePage() {
   const [data, setData] = useState(null);
-  const [user, setUser] = useState('VqjvRWlVcTX64SO7bKPl');
+  const [user, setUser] = useState(null);
 
   const { authState, oktaAuth } = useOktaAuth();
   const [userInfo, setUserInfo] = useState(null);
@@ -28,9 +28,10 @@ export default function UserProfilePage() {
   console.log(userInfo)
 
   React.useEffect(() => {
-    axios
+    if (userInfo) {
+      axios
       .get(
-        `${API_URL}/match/VqjvRWlVcTX64SO7bKPl`
+        `${API_URL}/match/${userInfo.sub}`
       )
       .then((response) => {
         setData(response.data);
@@ -38,7 +39,8 @@ export default function UserProfilePage() {
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+    }
+  },[userInfo]);
 
   return (
     <div className="UserProfilePage">
