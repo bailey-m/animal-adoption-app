@@ -37,7 +37,7 @@ export default function UserProfilePage() {
       })
       .catch((error) => {
         console.log(error);
-      });
+      })
   }
 
   const renderLikedPets = () => {
