@@ -10,35 +10,46 @@ import Box from "@mui/material/Box";
 
 export default function UserProfilePage() {
   const [data, setData] = useState(null);
-  const [user, setUser] = useState('VqjvRWlVcTX64SO7bKPl');
-
   const { authState, oktaAuth } = useOktaAuth();
   const [userInfo, setUserInfo] = useState(null);
 
   React.useEffect(() => {
-    if (!authState || !authState.isAuthenticated) {
-      setUserInfo(null);
-    } else {
-      oktaAuth.getUser().then((info) => {
-        setUserInfo(info);
-      });
-    }
+    (async() => {
+      if (!authState || !authState.isAuthenticated) {
+        console.log('hi')
+      } else {
+        await oktaAuth.getUser().then(async(info) => {
+          setUserInfo(info);
+          await getUserMatches(info);
+        });
+      }
+    })();
   }, [authState, oktaAuth]);
 
-  console.log(userInfo)
-
-  React.useEffect(() => {
-    axios
+  const getUserMatches = async(info) => {
+    await axios
       .get(
-        `${API_URL}/match/VqjvRWlVcTX64SO7bKPl`
+        `${API_URL}/match/${info.sub}`
       )
       .then((response) => {
         setData(response.data);
+        console.log(response.data);
       })
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }
+
+  const renderLikedPets = () => {
+    if (authState && authState.isAuthenticated && userInfo && userInfo.userType == 'user') {
+      return (
+        <>
+          <Typography sx={{gridRowStart: '2', gridColumn:'3/5' }} align="center" variant="h3">Liked Pets</Typography>
+          <UserLikedList sx={{gridRowStart: '3', gridColumn:'3/5', margin: "auto" }} data={data} card="PetCard" />
+        </>
+      )
+    }
+  }
 
   return (
     <div className="UserProfilePage">
@@ -53,8 +64,7 @@ export default function UserProfilePage() {
       >
         <Typography sx={{gridRow: '1', gridColumn:'span 4'}} variant='h3'>{userInfo ? userInfo.name : ''}</Typography>
         <Typography sx={{gridRowStart: '3', gridColumn:'span 2'}} variant='body1'></Typography>
-        <Typography sx={{gridRowStart: '2', gridColumn:'3/5' }} align="center" variant="h3">Liked Pets</Typography>
-        <UserLikedList sx={{gridRowStart: '3', gridColumn:'3/5', margin: "auto" }} data={data} card="PetCard" />
+        {renderLikedPets()}
       </Box>
     </div>
   );
