@@ -74,7 +74,7 @@ export function SearchPetProfilesPageContent() {
       {renderAddNewPetButton()}
     </Box>
     <Box>
-      <ItemList sx={{margin: 'auto'}} data={data} card='PetCard'/>
+      <ItemList sx={{margin: 'auto'}} data={data} card='PetCard' userInfo={userInfo}/>
     </Box>
     </>
   );
