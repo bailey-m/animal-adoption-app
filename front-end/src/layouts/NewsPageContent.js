@@ -5,7 +5,6 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import { ItemList } from '../components/ItemList';
 import axios from 'axios';
-import NewsCard from '../components/NewsCard';
 import {API_URL} from '../index';
 import { NewNewsForm } from '../components/NewNewsForm';
 
@@ -58,7 +57,7 @@ export function NewsPageContent() {
   }, []);
 
   const renderAddNewsPostButton = () => {
-    if (authState && authState.isAuthenticated && userInfo && userInfo.userType == 'admin') {
+    if (authState && authState.isAuthenticated && userInfo && userInfo.userType === 'admin') {
       return (
         <>
           <Button onClick={handleCardOpen} variant='contained'>+ Add News Post</Button>

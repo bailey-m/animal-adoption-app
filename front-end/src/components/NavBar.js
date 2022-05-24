@@ -51,7 +51,7 @@ export function NavBar() {
   }, [authState, oktaAuth]); 
 
   const renderFindAMatchButton = () => {
-    if (authState && authState.isAuthenticated && userInfo && userInfo.userType == 'user') {
+    if (authState && authState.isAuthenticated && userInfo && userInfo.userType === 'user') {
       return (
           <Link to='/findamatch' style={linkStyle}>
                 <ListItem sx={listItemStyle} button>

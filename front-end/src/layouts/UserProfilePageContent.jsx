@@ -41,7 +41,7 @@ export default function UserProfilePage() {
   }
 
   const renderLikedPets = () => {
-    if (authState && authState.isAuthenticated && userInfo && userInfo.userType == 'user') {
+    if (authState && authState.isAuthenticated && userInfo && userInfo.userType === 'user') {
       return (
         <>
           <Typography sx={{gridRowStart: '2', gridColumn:'3/5' }} align="center" variant="h3">Liked Pets</Typography>

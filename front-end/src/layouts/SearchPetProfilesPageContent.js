@@ -100,10 +100,7 @@ export function SearchPetProfilesPageContent() {
   }, [authState, oktaAuth]); 
 
   useEffect(() => {
-    axios.get(`${API_URL}/pets?` + 
-    `name=${name}&` +
-    `species=${animal}&` +
-    `breed=${breed}`)
+    axios.get(`${API_URL}/pets`)
     .then((response) => {
       setData(response.data);
     })
@@ -114,7 +111,7 @@ export function SearchPetProfilesPageContent() {
 
   
   const renderAddNewPetButton = () => {
-    if (authState && authState.isAuthenticated && userInfo && userInfo.userType == 'admin') {
+    if (authState && authState.isAuthenticated && userInfo && userInfo.userType === 'admin') {
       return (
         <>
           <Button onClick={handleCardOpen} variant='contained'>+ Add Pet</Button>
