@@ -48,7 +48,6 @@ export function NewsPageContent() {
   useEffect(() => {
     axios.get(`${API_URL}/news`)
     .then((response) => {
-      console.log(response);
       setData(response.data);
     })
     .catch((error) => {

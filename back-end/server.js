@@ -218,7 +218,6 @@ app.get('/match/:userID', async (req, res) => {
 
 app.post('/match', async (req, res) => {
     const response = await post_new_match(req.body.userID, req.body.petID);
-    console.log(response);
     if (response) {
         res.status(200).send();
     }

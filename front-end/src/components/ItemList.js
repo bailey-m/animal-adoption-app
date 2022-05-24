@@ -30,9 +30,8 @@ export function ItemCard(props) {
 
   let info;
   for (var item of props.data) {
-    if (item.id == props.itemId) {
+    if (item.id === props.itemId) {
       info = item;
-      console.log(info);
       break;
     }
   }

@@ -100,14 +100,17 @@ export function SearchPetProfilesPageContent() {
   }, [authState, oktaAuth]); 
 
   useEffect(() => {
-    axios.get(`${API_URL}/pets`)
+    axios.get(`${API_URL}/pets?` + 
+    `name=${name}&` +
+    `species=${animal}&` +
+    `breed=${breed}`)
     .then((response) => {
       setData(response.data);
     })
     .catch((error) => {
       console.log(error);
     });
-  }, []);
+  });
 
   
   const renderAddNewPetButton = () => {

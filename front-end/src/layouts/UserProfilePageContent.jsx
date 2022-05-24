@@ -16,7 +16,7 @@ export default function UserProfilePage() {
   React.useEffect(() => {
     (async() => {
       if (!authState || !authState.isAuthenticated) {
-        console.log('hi')
+        console.log('not authenticated');
       } else {
         await oktaAuth.getUser().then(async(info) => {
           setUserInfo(info);
@@ -33,7 +33,6 @@ export default function UserProfilePage() {
       )
       .then((response) => {
         setData(response.data);
-        console.log(response.data);
       })
       .catch((error) => {
         console.log(error);
