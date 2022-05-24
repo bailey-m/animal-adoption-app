@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import axios from 'axios';
 import {API_URL} from '../index';
 import {useState} from 'react';
+import { FormControl } from '@mui/material';
 
 const style = {
     position: 'absolute',
@@ -31,15 +32,20 @@ export function NewNewsForm(props) {
 
     return (
         <Box sx={style}>
-            <Typography>Add News Post</Typography>
-            <TextField id="outlined-basic" label="Title" variant="outlined" value={title} sx={{width: 200 }} 
-                onChange={(e) => {setTitle(e.target.value);}}/>
-            <TextField id="outlined-basic" label="Description" variant="outlined" multiline rows={2} value={description} 
-                onChange={(e) => {setDescription(e.target.value);}}/>
-            <Button variant='contained' onClick = {() => {axios.post(`${API_URL}/news`, null, {params: {
+            <FormControl sx={{width: 400}} >
+            <form onSubmit={() => {axios.post(`${API_URL}/news`, null, {params: {
                 Title: title,
                 Description: description,
-                }}); window.location.reload(false)}}>Add News Post</Button>
+                }}); window.location.reload(false)}}>
+
+            <Typography>Add New News Item</Typography>
+            <TextField required id="outlined-basic" label="Title" variant="outlined" value={title} sx={{width: 400 }} 
+                onChange={(e) => {setTitle(e.target.value);}}/>
+            <TextField required id="outlined-basic" label="Description" variant="outlined" multiline rows={2} value={description} sx={{width: 400 }} 
+                onChange={(e) => {setDescription(e.target.value);}}/>
+            <Button variant='contained' type='submit'>Add News Post</Button>
+            </form>
+            </FormControl>
         </Box>
     )
 }

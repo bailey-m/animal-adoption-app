@@ -162,7 +162,13 @@ app.get('/pets', async (req, res) => {
     for (var pet_id of pet_collection){
         let petDocument = await get_pet_by_id(pet_id);
         temp = format_pet_info(petDocument, pet_id);
-        pets.push(temp);
+        if (req.query.name == '' || req.query.name == temp.name){
+            if (req.query.species == '' || req.query.species == temp.species){
+                if (req.query.breed == '' || req.query.breed == temp.breed){
+                    pets.push(temp);
+                }
+            }
+        }
     }
     res.send(pets);
 });
@@ -239,7 +245,7 @@ app.post('/pets', async (req, res) =>{
         ],
         Name: req.query.Name,
         Age: Number(req.query.Age),
-        imageURL: 'https://upload.wikimedia.org/wikipedia/commons/f/f0/Mops_oct09_cropped2.jpg'
+        imageURL: "https://upload.wikimedia.org/wikipedia/commons/f/f0/Mops_oct09_cropped2.jpg"
     });
 });
 
