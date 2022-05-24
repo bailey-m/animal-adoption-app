@@ -126,7 +126,6 @@ async function get_matches(userID) {
 
         const matchQuery = firestore.collection('Match').where('UserID', '==', userID);
         const matchDocs = await matchQuery.get();
-
         for (let doc of matchDocs.docs) {
             const petID = doc.data().PetID;
             let petDoc = await get_pet_by_id(petID);
@@ -163,7 +162,13 @@ app.get('/pets', async (req, res) => {
     for (var pet_id of pet_collection){
         let petDocument = await get_pet_by_id(pet_id);
         temp = format_pet_info(petDocument, pet_id);
-        pets.push(temp);
+        if (req.query.name == '' || req.query.name == temp.name){
+            if (req.query.species == '' || req.query.species == temp.species){
+                if (req.query.breed == '' || req.query.breed == temp.breed){
+                    pets.push(temp);
+                }
+            }
+        }
     }
     res.send(pets);
 });
@@ -210,7 +215,6 @@ app.get('/users', async (req, res) => {
 });
 
 app.get('/match/:userID', async (req, res) => {
-    
     const matches = await get_matches(req.params.userID);
 
     if (matches) {
@@ -220,7 +224,7 @@ app.get('/match/:userID', async (req, res) => {
 
 app.post('/match', async (req, res) => {
     const response = await post_new_match(req.body.userID, req.body.petID);
-    
+    console.log(response);
     if (response) {
         res.status(200).send();
     }
@@ -241,7 +245,7 @@ app.post('/pets', async (req, res) =>{
         ],
         Name: req.query.Name,
         Age: Number(req.query.Age),
-        imageURL: 'https://upload.wikimedia.org/wikipedia/commons/f/f0/Mops_oct09_cropped2.jpg'
+        imageURL: "https://upload.wikimedia.org/wikipedia/commons/f/f0/Mops_oct09_cropped2.jpg"
     });
 });
 

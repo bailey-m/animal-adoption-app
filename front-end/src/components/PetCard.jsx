@@ -1,4 +1,5 @@
-import React, {Component} from 'react';
+import React, {useState, useEffect} from 'react';
+import { useOktaAuth } from '@okta/okta-react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -30,22 +31,59 @@ ATTRIBUTES NEEDED IN PROP:
 */
 
 
-class PetCard extends Component {
-    state = {  } 
+function PetCard(props) {
 
-    handleDislike = () => {
-        this.props.handleClose()
+  const { authState, oktaAuth } = useOktaAuth();
+  const [userInfo, setUserInfo] = useState(null);
+
+  useEffect(() => {
+    if (!authState || !authState.isAuthenticated) {
+      setUserInfo(null);
+    } else {
+      oktaAuth.getUser().then((info) => {
+        setUserInfo(info);
+      });
+    }
+  }, [authState, oktaAuth]); 
+
+    const renderButtons = () => {
+        if (authState && authState.isAuthenticated && userInfo && userInfo.userType == 'user' && !props.user) {
+            return (
+                <>
+                <Button 
+                    onClick={handleLike}
+                    startIcon={<FavoriteIcon />}
+                    color='success'
+                    variant='contained'
+                    sx={{gridRow:'9', gridColumn:'span 3'}}
+                    >Like this {props.petInfo.species}
+                </Button>
+        
+                <Button
+                    onClick={handleDislike}
+                    startIcon={<CloseIcon />}
+                    color='error'
+                    variant='contained'
+                    sx={{gridRow:'9', gridColumn:'span 3'}}
+                    >Not for me
+                </Button>
+                </>
+            )
+        }
     }
 
-    handleLike = () => {
-        this.props.handleLike()
+    const handleDislike = () => {
+        props.handleClose()
+    }
+
+    const handleLike = () => {
+        props.handleLike()
     }
     
-
-    availability() {
+    const availability = () => {
         const gridInfo = {gridRow:'5', gridColumnStart:'3', gridColumnEnd:'5'};
 
-        switch (this.props.petInfo.availability) {
+        switch (props.petInfo.availability) {
             case 'Available':
                 return <Chip label='Available' color='success' sx={gridInfo}/>
 
@@ -64,14 +102,13 @@ class PetCard extends Component {
 
     }
 
-    render() { 
-        return (
+    return (
         <Card sx={{ maxWidth: 500 }} raised>
             <CardMedia
                 component='img'
                 height='auto'
-                image={this.props.petInfo.image}
-                alt={this.props.petInfo.name}
+                image={props.petInfo.image}
+                alt={props.petInfo.name}
             />
             <CardContent >
                 <Box sx={{
@@ -82,14 +119,13 @@ class PetCard extends Component {
                     alignItems: 'center'
                 }}>
                 
-                    <Typography align='center' variant='h5' sx={{gridRow:'1', gridColumnStart:'2', gridColumnEnd:'6' }} >{this.props.petInfo.name}</Typography>
+                    <Typography align='center' variant='h5' sx={{gridRow:'1', gridColumnStart:'2', gridColumnEnd:'6' }} >{props.petInfo.name}</Typography>
                     
-                    <Typography align='center' variant='subtitle1' sx={{gridRow:'2', gridColumnStart:'1', gridColumnEnd:'4' }} >{this.props.petInfo.age}</Typography>
+                    <Typography align='center' variant='subtitle1' sx={{gridRow:'2', gridColumnStart:'1', gridColumnEnd:'4' }} >{props.petInfo.age}</Typography>
                          
-                    {/* CHANGE COLOR??????????????????*/ }
                     <Divider orientation='vertical' sx={{gridRow:'2', gridColumn:'3'}} />    
                         
-                    <Typography align='center' variant='subtitle1' sx={{gridRow:'2', gridColumnStart:'4', gridColumn:'span 3'}} >{this.props.petInfo.breed}</Typography>                   
+                    <Typography align='center' variant='subtitle1' sx={{gridRow:'2', gridColumnStart:'4', gridColumn:'span 3'}} >{props.petInfo.breed}</Typography>                   
                     
                     <Typography 
                         variant='body2'
@@ -97,55 +133,40 @@ class PetCard extends Component {
                         color='text.secondary' 
                         sx={{gridRowStart:'3', gridRowEnd:'5', gridColumnStart:'2', gridColumnEnd:'6'}}
                     >
-                        {this.props.petInfo.description}
+                        {props.petInfo.description}
                     </Typography>
 
-                    {this.availability()}
+                    {availability()}
                                         
                     <List
                         sx={{gridRowStart:'6', gridRowEnd:'9', gridColumnStart:'2', gridColumnEnd:'6', mx:'auto'}}
                     >
                         <ListItem disablePadding>
                             <ListItemIcon>
-                                {this.props.petInfo.disposition.goodWithAnimals && <CheckBoxIcon/>}
+                                {props.petInfo.disposition.goodWithAnimals && <CheckBoxIcon/>}
                             </ListItemIcon>
                             <ListItemText primary='Good with animals' primaryTypographyProps={{variant:'subtitle2'}}/>
                         </ListItem>
                         <ListItem disablePadding>
                             <ListItemIcon>
-                                {this.props.petInfo.disposition.goodWithChildren && <CheckBoxIcon/>}
+                                {props.petInfo.disposition.goodWithChildren && <CheckBoxIcon/>}
                             </ListItemIcon>
                             <ListItemText primary='Good with children' primaryTypographyProps={{variant:'subtitle2'}}/>
                         </ListItem>
                         <ListItem disablePadding>
                             <ListItemIcon>
-                                {this.props.petInfo.disposition.leashed && <CheckBoxIcon/>}
+                                {props.petInfo.disposition.leashed && <CheckBoxIcon/>}
                             </ListItemIcon>
                             <ListItemText primary='Must be leashed at all times' primaryTypographyProps={{variant:'subtitle2'}}/>
                         </ListItem>
                     </List>
                     
-                    {!this.props.user && <Button 
-                        onClick={this.handleLike}
-                        startIcon={<FavoriteIcon />}
-                        color='success'
-                        variant='contained'
-                        sx={{gridRow:'9', gridColumn:'span 3'}}
-                        >Like this {this.props.petInfo.species}
-                    </Button>}
-            
-                    {!this.props.user && <Button
-                        onClick={this.handleDislike}
-                        startIcon={<CloseIcon />}
-                        color='error'
-                        variant='contained'
-                        sx={{gridRow:'9', gridColumn:'span 3'}}
-                        >Not for me
-                    </Button>}
+                    {renderButtons()}
+                    
                 </Box>
             </CardContent>
-        </Card>);
-    }
+        </Card>
+    );
 }
  
 export default PetCard;
