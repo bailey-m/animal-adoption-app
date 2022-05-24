@@ -126,7 +126,6 @@ async function get_matches(userID) {
 
         const matchQuery = firestore.collection('Match').where('UserID', '==', userID);
         const matchDocs = await matchQuery.get();
-
         for (let doc of matchDocs.docs) {
             const petID = doc.data().PetID;
             let petDoc = await get_pet_by_id(petID);
@@ -216,7 +215,6 @@ app.get('/users', async (req, res) => {
 });
 
 app.get('/match/:userID', async (req, res) => {
-    
     const matches = await get_matches(req.params.userID);
 
     if (matches) {
@@ -226,7 +224,7 @@ app.get('/match/:userID', async (req, res) => {
 
 app.post('/match', async (req, res) => {
     const response = await post_new_match(req.body.userID, req.body.petID);
-    
+    console.log(response);
     if (response) {
         res.status(200).send();
     }

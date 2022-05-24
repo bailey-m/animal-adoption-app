@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React, {useState, useEffect} from 'react';
+import { useOktaAuth } from '@okta/okta-react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -8,7 +9,6 @@ import Select from '@mui/material/Select';
 import ListSubheader from '@mui/material/ListSubheader';
 import MenuItem from '@mui/material/MenuItem';
 import Modal from '@mui/material/Modal';
-import {useState} from 'react';
 import { ItemList } from '../components/ItemList';
 import axios from 'axios';
 import {API_URL} from '../index';
@@ -86,7 +86,20 @@ export function SearchPetProfilesPageContent() {
   const handleCardOpen = () => setCardOpen(true);
   const handleCardClose = () => setCardOpen(false);
 
-  React.useEffect(() => {
+  const { authState, oktaAuth } = useOktaAuth();
+  const [userInfo, setUserInfo] = useState(null);
+
+  useEffect(() => {
+    if (!authState || !authState.isAuthenticated) {
+      setUserInfo(null);
+    } else {
+      oktaAuth.getUser().then((info) => {
+        setUserInfo(info);
+      });
+    }
+  }, [authState, oktaAuth]); 
+
+  useEffect(() => {
     axios.get(`${API_URL}/pets?` + 
     `name=${name}&` +
     `species=${animal}&` +
@@ -99,12 +112,23 @@ export function SearchPetProfilesPageContent() {
     });
   }, []);
 
+  
+  const renderAddNewPetButton = () => {
+    if (authState && authState.isAuthenticated && userInfo && userInfo.userType == 'admin') {
+      return (
+        <>
+          <Button onClick={handleCardOpen} variant='contained'>+ Add Pet</Button>
+          <NewPetFormCard open={cardOpen} onClose={handleCardClose}/>
+        </>
+      )
+    }
+  }
+
   // TODO insert search/filters with Search button that queries based on filters
   return (
     <>
     <Box sx={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
-      <Button onClick={handleCardOpen} variant='contained'>+ Add Pet</Button>
-      <NewPetFormCard open={cardOpen} onClose={handleCardClose}/>
+      {renderAddNewPetButton()}
     </Box>
     <form>
     <TextField id="outlined-basic" label="Name" variant="outlined" value={name} sx={{width: 200 }} 
@@ -154,7 +178,7 @@ export function SearchPetProfilesPageContent() {
       })}}>Search</Button>
     </form>
     <Box>
-      <ItemList sx={{margin: 'auto'}} data={data} card='PetCard'/>
+      <ItemList sx={{margin: 'auto'}} data={data} card='PetCard' userInfo={userInfo}/>
     </Box>
     </>
   );
