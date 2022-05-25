@@ -68,7 +68,7 @@ function PetCard(props) {
     }
 
     const renderButtons = () => {
-        if (authState && authState.isAuthenticated && userInfo && userInfo.userType == 'user' && !props.user) {
+        if (authState && authState.isAuthenticated && userInfo && userInfo.userType === 'user' && !props.user) {
             return (
                 <>
                 <Button 

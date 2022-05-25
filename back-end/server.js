@@ -161,12 +161,6 @@ async function get_matches(id, search) {
 
 
 // *** Begin Pet controller functions ***
-app.get('/helloworld', async (req, res) => {
-    let petDocument = await get_pet_by_id('MdYu8EDvl1kcZvSsK9xP');
-    let data = {data: petDocument};
-    res.send(data);
-});
-
 app.get('/pets', async (req, res) => {
     // Get the list of document ids
     let pet_collection = await get_collection_ids('Pets');

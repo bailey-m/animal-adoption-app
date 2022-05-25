@@ -30,7 +30,7 @@ export function ItemCard(props) {
 
   let info;
   for (var item of props.data) {
-    if (item.id == props.itemId) {
+    if (item.id === props.itemId) {
       info = item;
       break;
     }
@@ -87,7 +87,7 @@ export function ItemList(props) {
       <>
       <List sx={{ width: 'fit-content', bgcolor: 'background.paper'}}>
         {props.data.map(item =>
-          <>
+          <div key={item.id}>
             <ListItem alignItems="flex-start" button data-index={item.id} onClick={handleCardOpen}>
               <ListItemAvatar>
                 <Avatar src={item.photoUrl} />
@@ -108,7 +108,7 @@ export function ItemList(props) {
               />
             </ListItem>
             <Divider/>
-          </>
+          </div>
         )}
       </List>
       <ItemCard open={cardOpen} onClose={handleCardClose} itemId={selectedItemId} data={props.data} card={props.card} userInfo={props.userInfo}/>
