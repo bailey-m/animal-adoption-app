@@ -100,10 +100,7 @@ export function SearchPetProfilesPageContent() {
   }, [authState, oktaAuth]); 
 
   useEffect(() => {
-    axios.get(`${API_URL}/pets?` + 
-    `name=${name}&` +
-    `species=${animal}&` +
-    `breed=${breed}`)
+    axios.get(`${API_URL}/pets?name=${name}&species=${animal}&breed=${breed}`)
     .then((response) => {
       setData(response.data);
     })

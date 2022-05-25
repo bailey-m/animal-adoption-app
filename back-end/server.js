@@ -120,20 +120,34 @@ async function post_new_match(userID, petID) {
     }
 }
 
-async function get_matches(userID) {
+async function get_matches(id, search) {
     try {
         let matches = [];
 
-        const matchQuery = firestore.collection('Match').where('UserID', '==', userID);
-        const matchDocs = await matchQuery.get();
-        for (let doc of matchDocs.docs) {
-            const petID = doc.data().PetID;
-            let petDoc = await get_pet_by_id(petID);
-            let pet = format_pet_info(petDoc, petID);
+        if (search === "pets"){
+            const matchQuery = firestore.collection('Match').where('UserID', '==', id);
+            const matchDocs = await matchQuery.get();
+            for (let doc of matchDocs.docs) {
+                const petID = doc.data().PetID;
+                let petDoc = await get_pet_by_id(petID);
+                let pet = format_pet_info(petDoc, petID);
 
             matches.push(pet);
-        }
+            }
+        } else {
+            const matchQuery = firestore.collection('Match').where('PetID', '==', id);
+            const matchDocs = await matchQuery.get();
+            for (let doc of matchDocs.docs) {
+                const userID = doc.data().UserID;
+                let userDoc = await get_user_by_id(userID);
+                let user = {
+                    name: userDoc.Name,
+                    email: userDoc.Email
+                }
 
+            matches.push(user);
+            }
+        }
         return matches;
 
     } catch (error) {
@@ -170,6 +184,7 @@ app.get('/pets', async (req, res) => {
             }
         }
     }
+
     res.send(pets);
 });
 
@@ -214,17 +229,20 @@ app.get('/users', async (req, res) => {
     res.send(users);
 });
 
-app.get('/match/:userID', async (req, res) => {
-    const matches = await get_matches(req.params.userID);
+app.get('/match/:userID/pets', async (req, res) => {
+    const matches = await get_matches(req.params.userID, "pets");
 
-    if (matches) {
-        res.status(200).send(matches);
-    }
+    res.status(200).send(matches);
+})
+
+app.get('/match/:petID/users', async (req, res) => {
+    const matches = await get_matches(req.params.petID, "users");
+
+    res.status(200).send(matches);
 })
 
 app.post('/match', async (req, res) => {
     const response = await post_new_match(req.body.userID, req.body.petID);
-    console.log(response);
     if (response) {
         res.status(200).send();
     }

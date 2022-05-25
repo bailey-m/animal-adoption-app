@@ -1,21 +1,9 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import Select from '@mui/material/Select';
-import ListSubheader from '@mui/material/ListSubheader';
-import MenuItem from '@mui/material/MenuItem';
-import Typography from '@mui/material/Typography';
 import axios from 'axios';
 import {API_URL} from '../index';
 import {useState} from 'react';
-import Checkbox from '@mui/material/Checkbox';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { Input } from '@mui/material';
-import { HelloWorldContainer } from './HelloWorldContainer';
+import { Box, Button, TextField, FormControl, InputLabel, Select, ListSubheader, 
+    MenuItem, Typography, Checkbox, FormGroup, FormControlLabel, Input} from '@mui/material';
 
 
 const species = [
@@ -95,16 +83,25 @@ export function NewPetForm(props) {
     return (
         <Box sx={style}>
             <FormControl sx={{width: 400}}>
-            <form onSubmit = {() => {axios.post(`${API_URL}/pets`, null, {params: {
-                Name: name,
-                Age: age, 
-                Breed: breed, 
-                Species: animal, 
-                Description: description,
-                Good_With_Animals: good_with_animals,
-                Good_With_Children: good_with_children,
-                Must_Be_Leashed: must_be_leashed,
-                }}); window.location.reload(false)}}>
+            <form onSubmit = {() => {
+                axios.post(`${API_URL}/pets`, null, {params: {
+                    Name: name,
+                    Age: age, 
+                    Breed: breed, 
+                    Species: animal, 
+                    Description: description,
+                    Good_With_Animals: good_with_animals,
+                    Good_With_Children: good_with_children,
+                    Must_Be_Leashed: must_be_leashed,
+                    imageURL: picture
+                }}); 
+                axios.post(`${API_URL}/news`, null, {params: {
+                    Title: `New Arrival! ${name}!`,
+                    Description: `${name} is now available for adoption!`,
+                    imageURL: picture
+                }})
+                window.location.reload(false)
+            }}>
 
             <Typography>Add New Pet</Typography>
             <TextField required id="outlined-basic" label="Name" variant="outlined" value={name} sx={{width: 200 }} 

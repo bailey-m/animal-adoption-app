@@ -29,11 +29,10 @@ export default function UserProfilePage() {
   const getUserMatches = async(info) => {
     await axios
       .get(
-        `${API_URL}/match/${info.sub}`
+        `${API_URL}/match/${info.sub}/pets`
       )
       .then((response) => {
         setData(response.data);
-        console.log(response.data);
       })
       .catch((error) => {
         console.log(error);
