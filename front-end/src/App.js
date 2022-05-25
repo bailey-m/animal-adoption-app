@@ -7,10 +7,10 @@ import UserProfilePage from './layouts/UserProfilePageContent';
 import LandingPageContent from './layouts/LandingPageContent';
 import {FindAMatchPageContent} from './layouts/FindAMatchPageContent';
 import { OktaAuth, toRelativeUrl } from '@okta/okta-auth-js';
-import { Security, SecureRoute, LoginCallback } from '@okta/okta-react';
-import config from './config';
+import { Security, LoginCallback } from '@okta/okta-react';
+import oktaConfig from './config';
 
-const oktaAuth = new OktaAuth(config.oidc);
+const oktaAuth = new OktaAuth(oktaConfig.oidc);
 
 const App = () => {
   const history = useNavigate();

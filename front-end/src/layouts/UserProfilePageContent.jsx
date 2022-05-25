@@ -16,7 +16,7 @@ export default function UserProfilePage() {
   React.useEffect(() => {
     (async() => {
       if (!authState || !authState.isAuthenticated) {
-        console.log('hi')
+        console.log('not authenticated');
       } else {
         await oktaAuth.getUser().then(async(info) => {
           setUserInfo(info);
@@ -33,7 +33,6 @@ export default function UserProfilePage() {
       )
       .then((response) => {
         setData(response.data);
-        console.log(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -41,7 +40,7 @@ export default function UserProfilePage() {
   }
 
   const renderLikedPets = () => {
-    if (authState && authState.isAuthenticated && userInfo && userInfo.userType == 'user') {
+    if (authState && authState.isAuthenticated && userInfo && userInfo.userType === 'user') {
       return (
         <>
           <Typography sx={{gridRowStart: '2', gridColumn:'3/5' }} align="center" variant="h3">Liked Pets</Typography>

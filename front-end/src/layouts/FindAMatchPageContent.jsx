@@ -56,7 +56,6 @@ export function FindAMatchPageContent(props) {
   const [user, setUser] = React.useState(null);
   const [index, setIndex] = React.useState(0);
   const [cardUp, setCardUp] = React.useState(true);
-  const [matches, setMatches] = React.useState(null);
   const { authState, oktaAuth } = useOktaAuth();
 
 
@@ -80,7 +79,6 @@ export function FindAMatchPageContent(props) {
       `${API_URL}/match/${user.sub}`
     )
     .then((response) => {
-      setMatches(response.data);
       return response.data;
     })
     .catch((error) => {
@@ -93,7 +91,7 @@ export function FindAMatchPageContent(props) {
     .then((response) => {
       let result = response.data;
       for (let match of userMatches) {
-        result = result.filter(pet => pet.id != match.id);
+        result = result.filter(pet => pet.id !== match.id);
       }
       setData(result);
     })

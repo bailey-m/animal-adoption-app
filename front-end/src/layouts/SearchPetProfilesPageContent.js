@@ -110,11 +110,11 @@ export function SearchPetProfilesPageContent() {
     .catch((error) => {
       console.log(error);
     });
-  }, []);
+  });
 
   
   const renderAddNewPetButton = () => {
-    if (authState && authState.isAuthenticated && userInfo && userInfo.userType == 'admin') {
+    if (authState && authState.isAuthenticated && userInfo && userInfo.userType === 'admin') {
       return (
         <>
           <Button onClick={handleCardOpen} variant='contained'>+ Add Pet</Button>
