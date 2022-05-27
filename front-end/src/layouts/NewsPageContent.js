@@ -1,8 +1,8 @@
-import * as React from 'react';
+import React, {useState, useEffect} from 'react';
+import { useOktaAuth } from '@okta/okta-react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
-import {useState} from 'react';
 import { ItemList } from '../components/ItemList';
 import axios from 'axios';
 import NewsCard from '../components/NewsCard';
@@ -33,7 +33,20 @@ export function NewsPageContent() {
   const handleCardOpen = () => setCardOpen(true);
   const handleCardClose = () => setCardOpen(false);
 
-  React.useEffect(() => {
+  const { authState, oktaAuth } = useOktaAuth();
+  const [userInfo, setUserInfo] = useState(null);
+
+  useEffect(() => {
+    if (!authState || !authState.isAuthenticated) {
+      setUserInfo(null);
+    } else {
+      oktaAuth.getUser().then((info) => {
+        setUserInfo(info);
+      });
+    }
+  }, [authState, oktaAuth]); 
+
+  useEffect(() => {
     axios.get(`${API_URL}/news`)
     .then((response) => {
       console.log(response);
@@ -44,11 +57,21 @@ export function NewsPageContent() {
     });
   }, []);
 
+  const renderAddNewsPostButton = () => {
+    if (authState && authState.isAuthenticated && userInfo && userInfo.userType == 'admin') {
+      return (
+        <>
+          <Button onClick={handleCardOpen} variant='contained'>+ Add News Post</Button>
+          <NewNewsFormCard open={cardOpen} onClose={handleCardClose}/>  
+        </>
+      )
+    }
+  }
+
   return (
     <>
     <Box sx={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
-      <Button onClick={handleCardOpen} variant='contained'>+ Add News Post</Button>
-      <NewNewsFormCard open={cardOpen} onClose={handleCardClose}/>
+      {renderAddNewsPostButton()}
     </Box>
     <Box>
       <ItemList sx={{margin: 'auto'}} data={data} card='NewsCard'/>

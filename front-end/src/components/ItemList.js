@@ -1,5 +1,7 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
+import { useOktaAuth } from '@okta/okta-react';
 import CircularProgress from '@mui/material/CircularProgress';
+import axios from 'axios';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider';
@@ -11,6 +13,20 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import NewsCard from './NewsCard';
 import PetCard from './PetCard';
+import { API_URL } from '../index';
+import DeleteIcon from '@mui/icons-material/Delete';
+
+const listItemStyle = {
+  display: 'flex', 
+  flexDirection: 'column',
+  float: 'right'
+};
+
+const logoStyle = {
+  color: 'gray',
+  marginTop: '10px',
+  fontSize: '30px'
+}
 
 const style = {
   position: 'absolute',
@@ -30,7 +46,22 @@ export function ItemCard(props) {
   for (var item of props.data) {
     if (item.id == props.itemId) {
       info = item;
+      console.log(info);
       break;
+    }
+  }
+
+  const handleLike = async() => {
+    const match = {
+      userID: props.userInfo ? props.userInfo.sub : '',
+      petID: info ? info.id : ''
+    }
+
+    const response = await axios.post(`${API_URL}/match`, match)
+    if (response.status === 200) {
+      props.onClose();
+    } else {
+      alert('Something went wrong!');
     }
   }
 
@@ -45,7 +76,7 @@ export function ItemCard(props) {
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
             { props.card === 'NewsCard' && <NewsCard news={info}/> }
-            { props.card === 'PetCard' && <PetCard user petInfo={info} handleClose={props.onClose} /> }
+            { props.card === 'PetCard' && <PetCard petInfo={info} handleClose={props.onClose} handleLike={handleLike}/> }
           </Typography>
         </Box>
       </Modal>
@@ -63,6 +94,34 @@ export function ItemList(props) {
   }
 
   const handleCardClose = () => setCardOpen(false);
+
+const { authState, oktaAuth } = useOktaAuth();
+const [userInfo, setUserInfo] = useState(null);
+
+useEffect(() => {
+  if (!authState || !authState.isAuthenticated) {
+    setUserInfo(null);
+  } else {
+    oktaAuth.getUser().then((info) => {
+      setUserInfo(info);
+    });
+  }
+}, [authState, oktaAuth]); 
+
+const renderDeleteIcon = (item) => {
+  if (authState && authState.isAuthenticated && userInfo && userInfo.userType == 'admin') {
+    return (
+      <>
+    <DeleteIcon sx={logoStyle} onClick={(e) => {e.stopPropagation();
+
+      if (props.card === 'PetCard'){
+        axios.delete(`${API_URL}/pets?` +
+        `id=${item.id}`); window.location.reload(false)}
+
+      if (props.card === 'NewsCard'){
+        axios.delete(`${API_URL}/news?` +
+        `id=${item.id}`); window.location.reload(false)
+      }}}/></>)}};
 
   return (
     <>
@@ -88,14 +147,17 @@ export function ItemList(props) {
                       {item.description}
                     </Typography>
                   </React.Fragment>
+                  
                 }
               />
-            </ListItem>
-            <Divider/>
+              {renderDeleteIcon(item)}
+
+          </ListItem>
+          <Divider/>
           </>
         )}
       </List>
-      <ItemCard open={cardOpen} onClose={handleCardClose} itemId={selectedItemId} data={props.data} card={props.card}/>
+      <ItemCard open={cardOpen} onClose={handleCardClose} itemId={selectedItemId} data={props.data} card={props.card} userInfo={props.userInfo}/>
       </>
     )}
     </>

@@ -58,8 +58,8 @@ function format_pet_info (pet, id) {
         goodWithChildren: pet.Disposition[1],
         leashed: pet.Disposition[2]};
     temp["species"] = pet.Species;
+    temp["date"] = pet.Date_Added.toDate().toLocaleDateString("en-ZA");
 
-    
     return temp;
 }
 
@@ -126,7 +126,6 @@ async function get_matches(userID) {
 
         const matchQuery = firestore.collection('Match').where('UserID', '==', userID);
         const matchDocs = await matchQuery.get();
-
         for (let doc of matchDocs.docs) {
             const petID = doc.data().PetID;
             let petDoc = await get_pet_by_id(petID);
@@ -144,9 +143,6 @@ async function get_matches(userID) {
 
 // *** End Match model functions ***
 
-
-
-
 // *** Begin Pet controller functions ***
 app.get('/helloworld', async (req, res) => {
     let petDocument = await get_pet_by_id('MdYu8EDvl1kcZvSsK9xP');
@@ -158,15 +154,24 @@ app.get('/pets', async (req, res) => {
     // Get the list of document ids
     let pet_collection = await get_collection_ids('Pets');
     let pets = [];
-
+    var date = req.query.date.replaceAll("-","");
     // Add an entry for each document
     for (var pet_id of pet_collection){
         let petDocument = await get_pet_by_id(pet_id);
         temp = format_pet_info(petDocument, pet_id);
+        var tempDate = temp.date.replaceAll("/","");
         if (req.query.name == '' || req.query.name == temp.name){
             if (req.query.species == '' || req.query.species == temp.species){
                 if (req.query.breed == '' || req.query.breed == temp.breed){
-                    pets.push(temp);
+                    if (req.query.good_with_animals != 'true' || temp.disposition.goodWithAnimals != false){
+                        if (req.query.good_with_children != 'true' || temp.disposition.goodWithChildren != false){
+                            if (req.query.safe_off_leash != 'true' || temp.disposition.leashed != true){
+                                if (req.query.date == '' || date <= tempDate){  
+                                    pets.push(temp);
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -216,7 +221,6 @@ app.get('/users', async (req, res) => {
 });
 
 app.get('/match/:userID', async (req, res) => {
-    
     const matches = await get_matches(req.params.userID);
 
     if (matches) {
@@ -226,7 +230,7 @@ app.get('/match/:userID', async (req, res) => {
 
 app.post('/match', async (req, res) => {
     const response = await post_new_match(req.body.userID, req.body.petID);
-    
+    console.log(response);
     if (response) {
         res.status(200).send();
     }
@@ -261,6 +265,13 @@ app.post('/news', async (req, res) =>{
     });
 });
 
+app.delete('/pets', async (req, res) =>{
+    await firestore.collection('Pets').doc(req.query.id).delete();
+});
+
+app.delete('/news', async (req, res) =>{
+    await firestore.collection('News_Item').doc(req.query.id).delete();
+});
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
