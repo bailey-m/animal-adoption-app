@@ -44,7 +44,7 @@ export function ItemCard(props) {
 
   let info;
   for (var item of props.data) {
-    if (item.id == props.itemId) {
+    if (item.id === props.itemId) {
       info = item;
       console.log(info);
       break;
@@ -130,7 +130,7 @@ const renderDeleteIcon = (item) => {
       <>
       <List sx={{ width: 'fit-content', bgcolor: 'background.paper'}}>
         {props.data.map(item =>
-          <>
+          <div key={item.id}>
             <ListItem alignItems="flex-start" button data-index={item.id} onClick={handleCardOpen}>
               <ListItemAvatar>
                 <Avatar src={item.photoUrl} />
@@ -149,9 +149,7 @@ const renderDeleteIcon = (item) => {
                   </React.Fragment>
                   
                 }
-              />
-              {renderDeleteIcon(item)}
-
+              />              {renderDeleteIcon(item)}
           </ListItem>
           <Divider/>
           </>

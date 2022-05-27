@@ -93,7 +93,7 @@ export function FindAMatchPageContent(props) {
     .then((response) => {
       let result = response.data;
       for (let match of userMatches) {
-        result = result.filter(pet => pet.id != match.id);
+        result = result.filter(pet => pet.id !== match.id);
       }
       setData(result);
     })

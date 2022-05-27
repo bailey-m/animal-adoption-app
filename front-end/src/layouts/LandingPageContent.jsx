@@ -4,7 +4,6 @@ import { Box } from '@mui/system';
 import {Link} from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
 import NewspaperOutlinedIcon from '@mui/icons-material/NewspaperOutlined';
-import ListAltOutlinedIcon from '@mui/icons-material/ListAltOutlined';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import React, { useState, useEffect } from 'react';
@@ -15,21 +14,9 @@ const linkStyle = {
     color: "white",
 };
 
-const listItemStyle = {
-    display: 'flex', 
-    flexDirection: 'column'
-};
-
 const iconStyle = {
     color: 'white'
 };
-
-const logoStyle = {
-    ...iconStyle,
-    marginTop: '20px',
-    fontSize: '48px'
-}
-
 
 export default function LandingPageContent(props) {
     const { authState, oktaAuth } = useOktaAuth();
