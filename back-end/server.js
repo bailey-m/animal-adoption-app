@@ -1,14 +1,9 @@
 const express = require('express');
 const cors = require('cors');
-const bodyParser = require('body-parser');
 const app = express();
-const {Firestore, QuerySnapshot} = require('@google-cloud/firestore');
-const firestore = new Firestore();
 
-app.use(bodyParser.json());
 app.use(cors());
 app.enable('trust proxy');
-
 
 // Turns a collection into a list of document IDs
 // Based on code from: https://stackoverflow.com/questions/61435004/get-all-documents-from-a-collection
@@ -272,6 +267,8 @@ app.delete('/pets', async (req, res) =>{
 app.delete('/news', async (req, res) =>{
     await firestore.collection('News_Item').doc(req.query.id).delete();
 });
+
+app.use('/', require('./api/index'));
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

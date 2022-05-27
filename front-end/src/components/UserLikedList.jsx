@@ -4,7 +4,6 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import { ItemCard } from "./ItemList";
 import SimplePetCard from "./SimplePetCard";
-import { Typography } from "@mui/material";
 
 export function UserLikedList(props) {
   const [cardOpen, setCardOpen] = useState(false);
