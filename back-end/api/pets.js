@@ -1,3 +1,5 @@
+const {Firestore, QuerySnapshot} = require('@google-cloud/firestore');
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('../lib/firestore');
@@ -38,8 +40,8 @@ function format_pet_info (pet, id) {
         goodWithChildren: pet.Disposition[1],
         leashed: pet.Disposition[2]};
     temp["species"] = pet.Species;
+    temp["date"] = pet.Date_Added.toDate().toLocaleDateString("en-ZA");
 
-    
     return temp;
 }
 
@@ -48,18 +50,27 @@ function format_pet_info (pet, id) {
 // *** Begin Pet controller functions ***
 app.get('/', async (req, res) => {
     // Get the list of document ids
-    try {
+    try{
         let pet_collection = await fs.get_collection_ids('Pets');
         let pets = [];
-    
+        var date = req.query.date.replaceAll("-","");
         // Add an entry for each document
         for (var pet_id of pet_collection){
             let petDocument = await get_pet_by_id(pet_id);
             temp = format_pet_info(petDocument, pet_id);
+            var tempDate = temp.date.replaceAll("/","");
             if (req.query.name == '' || req.query.name == temp.name){
                 if (req.query.species == '' || req.query.species == temp.species){
                     if (req.query.breed == '' || req.query.breed == temp.breed){
-                        pets.push(temp);
+                        if (req.query.good_with_animals != 'true' || temp.disposition.goodWithAnimals != false){
+                            if (req.query.good_with_children != 'true' || temp.disposition.goodWithChildren != false){
+                                if (req.query.safe_off_leash != 'true' || temp.disposition.leashed != true){
+                                    if (req.query.date == '' || date <= tempDate){  
+                                        pets.push(temp);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -91,6 +102,14 @@ app.post('/', async (req, res) =>{
    } catch (err) {
        console.log(err);
    }
+});
+
+app.delete('/', async (req, res) =>{
+    try {
+        await firestore.collection('Pets').doc(req.query.id).delete();
+    } catch (err) {
+        console.log(err);
+    }
 });
 
 // *** End Pet controller functions ***

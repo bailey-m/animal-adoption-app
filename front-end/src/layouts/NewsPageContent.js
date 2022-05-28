@@ -58,6 +58,7 @@ export function NewsPageContent() {
   }, []);
 
   const renderAddNewsPostButton = () => {
+    
     if (authState && authState.isAuthenticated && userInfo && userInfo.userType === 'admin') {
       return (
         <>

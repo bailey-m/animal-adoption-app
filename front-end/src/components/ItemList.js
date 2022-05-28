@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
+import { useOktaAuth } from '@okta/okta-react';
 import CircularProgress from '@mui/material/CircularProgress';
 import axios from 'axios';
 import List from '@mui/material/List';
@@ -15,6 +16,19 @@ import PetCard from './PetCard';
 import { ThemeProvider } from '@mui/material';
 import { textTheme } from '../theme';
 import { API_URL } from '../index';
+import DeleteIcon from '@mui/icons-material/Delete';
+
+const listItemStyle = {
+  display: 'flex', 
+  flexDirection: 'column',
+  float: 'right'
+};
+
+const logoStyle = {
+  color: 'gray',
+  marginTop: '10px',
+  fontSize: '30px'
+}
 
 const style = {
   position: 'absolute',
@@ -34,6 +48,7 @@ export function ItemCard(props) {
   for (var item of props.data) {
     if (item.id === props.itemId) {
       info = item;
+      console.log(info);
       break;
     }
   }
@@ -82,6 +97,34 @@ export function ItemList(props) {
 
   const handleCardClose = () => setCardOpen(false);
 
+const { authState, oktaAuth } = useOktaAuth();
+const [userInfo, setUserInfo] = useState(null);
+
+useEffect(() => {
+  if (!authState || !authState.isAuthenticated) {
+    setUserInfo(null);
+  } else {
+    oktaAuth.getUser().then((info) => {
+      setUserInfo(info);
+    });
+  }
+}, [authState, oktaAuth]); 
+
+const renderDeleteIcon = (item) => {
+  if (authState && authState.isAuthenticated && userInfo && userInfo.userType == 'admin') {
+    return (
+      <>
+    <DeleteIcon sx={logoStyle} onClick={(e) => {e.stopPropagation();
+
+      if (props.card === 'PetCard'){
+        axios.delete(`${API_URL}/pets?` +
+        `id=${item.id}`); window.location.reload(false)}
+
+      if (props.card === 'NewsCard'){
+        axios.delete(`${API_URL}/news?` +
+        `id=${item.id}`); window.location.reload(false)
+      }}}/></>)}};
+
   return (
     <>
     {!props.data && <CircularProgress /> }
@@ -107,11 +150,12 @@ export function ItemList(props) {
                       {item.description}
                     </Typography>
                   </React.Fragment>
+                  
                 }
-              />
-            </ListItem>
-            <Divider/>
-          </div>
+              />              {renderDeleteIcon(item)}
+          </ListItem>
+          <Divider/>
+          </>
         )}
       </List>
 

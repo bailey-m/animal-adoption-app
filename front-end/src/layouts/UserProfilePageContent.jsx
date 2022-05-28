@@ -33,6 +33,7 @@ export default function UserProfilePage() {
       )
       .then((response) => {
         setData(response.data);
+        console.log(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -40,6 +41,7 @@ export default function UserProfilePage() {
   }
 
   const renderLikedPets = () => {
+
     if (authState && authState.isAuthenticated && userInfo && userInfo.userType === 'user') {
       return (
         <>

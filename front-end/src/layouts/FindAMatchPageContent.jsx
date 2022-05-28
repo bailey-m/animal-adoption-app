@@ -59,6 +59,7 @@ export function FindAMatchPageContent(props) {
   const [user, setUser] = React.useState(null);
   const [index, setIndex] = React.useState(0);
   const [cardUp, setCardUp] = React.useState(true);
+  const [matches, setMatches] = React.useState(null);
   const { authState, oktaAuth } = useOktaAuth();
 
 
