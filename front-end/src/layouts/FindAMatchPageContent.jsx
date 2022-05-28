@@ -5,6 +5,7 @@ import { API_URL } from '../index';
 import { CircularProgress, keyframes, Box, Typography } from '@mui/material';
 import styled from '@mui/material/styles/styled';
 import { useOktaAuth } from '@okta/okta-react';
+import { ClassNames } from '@emotion/react';
 
 // Exit animation
 const slideOutBottom = keyframes`
@@ -65,41 +66,37 @@ export function FindAMatchPageContent(props) {
       if (!authState || !authState.isAuthenticated) {
         setUser(null);
       } else {
-        await oktaAuth.getUser().then(async(info) => {
-          setUser(info);
-          let userMatches = await getUserMatches(info);
-          await getPets(userMatches);
-        });
+        let info = await oktaAuth.getUser();
+        setUser(info);
+        const userMatches = await getUserMatches(info);
+        await getPets(userMatches);
       }
     })();
   }, [authState, oktaAuth]);
 
   const getUserMatches = async(user) => {
-    return await axios
-    .get(
-      `${API_URL}/match/${user.sub}`
-    )
-    .then((response) => {
-      setMatches(response.data);
+
+    try {
+      const response = await axios.get(`${API_URL}/match/${user.sub}/pets`)
       return response.data;
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+    } catch (err) {
+      console.log(err);
+    }
   }
   
   const getPets = async(userMatches) => {
-    await axios.get(`${API_URL}/pets`)
-    .then((response) => {
+    console.log('userMatches in getPets: ', userMatches)
+    try {
+      const response = await axios.get(`${API_URL}/pets?name&species&breed`);
       let result = response.data;
+      console.log('all pets: ', result);
       for (let match of userMatches) {
         result = result.filter(pet => pet.id !== match.id);
       }
       setData(result);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   const handleLike = async () => {
@@ -123,8 +120,6 @@ export function FindAMatchPageContent(props) {
       setCardUp(true);
     }, 600)
   }
-
-  
 
   return (
     <>
