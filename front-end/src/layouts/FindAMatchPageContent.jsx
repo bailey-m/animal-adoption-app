@@ -4,10 +4,8 @@ import axios from 'axios';
 import { API_URL } from '../index';
 import { CircularProgress, keyframes, Box, Typography, ThemeProvider } from '@mui/material';
 import styled from '@mui/material/styles/styled';
-import { flexbox } from '@mui/system';
 import { headingTheme, textTheme } from '../theme';
 import { useOktaAuth } from '@okta/okta-react';
-import { ClassNames } from '@emotion/react';
 
 // Exit animation
 const slideOutBottom = keyframes`
@@ -45,13 +43,6 @@ function setAnimation(cardUp) {
   }
 }
 
-// Box to apply animations to
-const Holder = styled(Box)(({cardUp}) => ({
-  animation: setAnimation(cardUp),
-  alignItems: "center",
-  justifyContent: "center",
-  display: "flex"
-}));
 
 
 export function FindAMatchPageContent(props) {
@@ -59,7 +50,6 @@ export function FindAMatchPageContent(props) {
   const [user, setUser] = React.useState(null);
   const [index, setIndex] = React.useState(0);
   const [cardUp, setCardUp] = React.useState(true);
-  const [matches, setMatches] = React.useState(null);
   const { authState, oktaAuth } = useOktaAuth();
 
 
@@ -80,6 +70,7 @@ export function FindAMatchPageContent(props) {
 
     try {
       const response = await axios.get(`${API_URL}/match/${user.sub}/pets`)
+      console.log('user matches: ', response.data);
       return response.data;
     } catch (err) {
       console.log(err);
@@ -89,7 +80,7 @@ export function FindAMatchPageContent(props) {
   const getPets = async(userMatches) => {
     console.log('userMatches in getPets: ', userMatches)
     try {
-      const response = await axios.get(`${API_URL}/pets?name&species&breed`);
+      const response = await axios.get(`${API_URL}/pets?name&species&breed&good_with_animals&good_with_children&safe_off_leash&date`);
       let result = response.data;
       console.log('all pets: ', result);
       for (let match of userMatches) {

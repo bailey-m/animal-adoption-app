@@ -1,24 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import { useOktaAuth } from '@okta/okta-react';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import Select from '@mui/material/Select';
-import Checkbox from '@mui/material/Checkbox';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import ListSubheader from '@mui/material/ListSubheader';
-import MenuItem from '@mui/material/MenuItem';
-import Modal from '@mui/material/Modal';
 import { ItemList } from '../components/ItemList';
 import axios from 'axios';
 import {API_URL} from '../index';
 import { NewPetForm } from '../components/NewPetForm';
-import { Input } from '@mui/material';
-import Typography from '@mui/material/Typography';
-import { ThemeProvider, Typography } from '@mui/material';
+import { ThemeProvider, Typography, Input, Modal, MenuItem, ListSubheader, FormControlLabel, FormGroup, 
+  Checkbox, Select, InputLabel, FormControl, TextField, Button, Box } from '@mui/material';
 import { headingTheme } from '../theme';
 
 const species = [
@@ -130,18 +117,6 @@ export function SearchPetProfilesPageContent() {
   
   const renderAddNewPetButton = () => {
     if (authState && authState.isAuthenticated && userInfo && userInfo.userType === 'admin') {
-      return (
-        <>
-          <Button onClick={handleCardOpen} variant='contained'>+ Add Pet</Button>
-          <NewPetFormCard open={cardOpen} onClose={handleCardClose}/>
-        </>
-      )
-    }
-  }
-
-  
-  const renderAddNewPetButton = () => {
-    if (authState && authState.isAuthenticated && userInfo && userInfo.userType == 'admin') {
       return (
         <>
           <Button onClick={handleCardOpen} variant='contained'>+ Add Pet</Button>
