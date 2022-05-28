@@ -45,8 +45,12 @@ export default function UserProfilePage() {
     if (authState && authState.isAuthenticated && userInfo && userInfo.userType === 'user') {
       return (
         <>
-          <Typography sx={{gridRowStart: '2', gridColumn:'3/5' }} align="center" variant="h3">Liked Pets</Typography>
-          <UserLikedList sx={{gridRowStart: '3', gridColumn:'3/5', margin: "auto" }} data={data} card="PetCard" />
+          <ThemeProvider theme={headingTheme}>
+            <Typography sx={{gridRowStart: '2', gridColumn:'3/5' }} align="center" variant="h3">Liked Pets</Typography>
+          </ThemeProvider>
+          <ThemeProvider theme={textTheme}>
+            <UserLikedList sx={{gridRowStart: '3', gridColumn:'3/5', margin: "auto" }} data={data} card="PetCard" />
+          </ThemeProvider>
         </>
       )
     }

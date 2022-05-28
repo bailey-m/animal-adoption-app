@@ -1,18 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import { useOktaAuth } from '@okta/okta-react';
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
 import {Link} from 'react-router-dom';
 import NewspaperOutlinedIcon from '@mui/icons-material/NewspaperOutlined';
 import ListAltOutlinedIcon from '@mui/icons-material/ListAltOutlined';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import PetsIcon from '@mui/icons-material/Pets';
-import Typography from '@mui/material/Typography';
-import { ThemeProvider } from '@mui/material';
+import { ThemeProvider, Box, Drawer, Toolbar, List, ListItem, Typography } from '@mui/material';
 import { textTheme } from '../theme';
 
 
@@ -91,8 +85,7 @@ export function NavBar() {
           sx={{
             width: drawerWidth,
             boxSizing: 'border-box',
-          }
-        }}
+          }}
         variant="permanent"
         anchor="left"
       >

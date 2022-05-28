@@ -1,9 +1,5 @@
 import React, {Component} from 'react';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import { Typography, ThemeProvider } from '@mui/material';
+import { Typography, ThemeProvider, Box, Card, CardContent, CardMedia } from '@mui/material';
 import { textTheme } from '../theme';
 
 class NewsCard extends Component {

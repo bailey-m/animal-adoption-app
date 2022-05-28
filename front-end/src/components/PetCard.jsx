@@ -48,7 +48,7 @@ function PetCard(props) {
   })
 
     const renderAccordion = () => {
-        if (authState && authState.isAuthenticated && userInfo && userInfo.userType == 'admin') {
+        if (authState && authState.isAuthenticated && userInfo && userInfo.userType === 'admin') {
             return (
                 <>
                     <Accordion sx={{width:'100%'}}>

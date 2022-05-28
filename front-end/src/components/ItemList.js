@@ -1,28 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import { useOktaAuth } from '@okta/okta-react';
-import CircularProgress from '@mui/material/CircularProgress';
 import axios from 'axios';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import Divider from '@mui/material/Divider';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import Avatar from '@mui/material/Avatar';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
 import NewsCard from './NewsCard';
 import PetCard from './PetCard';
-import { ThemeProvider } from '@mui/material';
 import { textTheme } from '../theme';
 import { API_URL } from '../index';
 import DeleteIcon from '@mui/icons-material/Delete';
-
-const listItemStyle = {
-  display: 'flex', 
-  flexDirection: 'column',
-  float: 'right'
-};
+import { CircularProgress, List, ListItem, Divider, ListItemText, ListItemAvatar, 
+  Avatar, Typography, Box, Modal, ThemeProvider } from "@mui/material";
 
 const logoStyle = {
   color: 'gray',
@@ -48,7 +33,6 @@ export function ItemCard(props) {
   for (var item of props.data) {
     if (item.id === props.itemId) {
       info = item;
-      console.log(info);
       break;
     }
   }
@@ -111,7 +95,7 @@ useEffect(() => {
 }, [authState, oktaAuth]); 
 
 const renderDeleteIcon = (item) => {
-  if (authState && authState.isAuthenticated && userInfo && userInfo.userType == 'admin') {
+  if (authState && authState.isAuthenticated && userInfo && userInfo.userType === 'admin') {
     return (
       <>
     <DeleteIcon sx={logoStyle} onClick={(e) => {e.stopPropagation();
@@ -152,10 +136,11 @@ const renderDeleteIcon = (item) => {
                   </React.Fragment>
                   
                 }
-              />              {renderDeleteIcon(item)}
+              />              
+              {renderDeleteIcon(item)}
           </ListItem>
           <Divider/>
-          </>
+          </div>
         )}
       </List>
 

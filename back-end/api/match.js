@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('../lib/firestore');
 const pets = require('./pets');
+const users = require('./users');
 
 const firestore = fs.firestore;
 const app = express.Router();
@@ -24,19 +25,35 @@ async function post_new_match(userID, petID) {
     }
 }
 
-async function get_matches(userID) {
+async function get_matches(id, type) {
     try {
         let matches = [];
 
-        const matchQuery = firestore.collection('Match').where('UserID', '==', userID);
-        const matchDocs = await matchQuery.get();
-        for (let doc of matchDocs.docs) {
-            const petID = doc.data().PetID;
-            let petDoc = await pets.get_pet_by_id(petID);
-            let pet = pets.format_pet_info(petDoc, petID);
+        if (type === "pets"){
+            const matchQuery = firestore.collection('Match').where('UserID', '==', id);
+            const matchDocs = await matchQuery.get();
+            for (let doc of matchDocs.docs) {
+                const petID = doc.data().PetID;
+                let petDoc = await pets.get_pet_by_id(petID);
+                let pet = pets.format_pet_info(petDoc, petID);
 
-            matches.push(pet);
+                matches.push(pet);
+            }
+        } else {
+            const matchQuery = firestore.collection('Match').where('PetID', '==', id);
+            const matchDocs = await matchQuery.get();
+            for (let doc of matchDocs.docs) {
+                const userID = doc.data().UserID;
+                let userDoc = await users.get_user_by_id(userID);
+                let user = {
+                    name: userDoc.Name,
+                    email: userDoc.Email
+                }
+
+                matches.push(user);
+            }
         }
+        
 
         return matches;
 
@@ -50,9 +67,9 @@ async function get_matches(userID) {
 
 // *** Start Match controller functions ***
 
-app.get('/:userID', async (req, res) => {
+app.get('/:userID/pets', async (req, res) => {
     try {
-        const matches = await get_matches(req.params.userID);
+        const matches = await get_matches(req.params.userID, "pets");
 
         if (matches) {
             res.status(200).send(matches);
@@ -60,7 +77,19 @@ app.get('/:userID', async (req, res) => {
     } catch (err) {
         console.log(err);
     }
-})
+});
+
+app.get('/:petID/users', async (req, res) => {
+    try {
+        const matches = await get_matches(req.params.petID, "users");
+
+        if (matches) {
+            res.status(200).send(matches);
+        }
+    } catch (err) {
+        console.log(err);
+    }
+});
 
 app.post('/', async (req, res) => {
     try {

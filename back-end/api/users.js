@@ -53,3 +53,4 @@ app.get('/', async (req, res) => {
 // *** End Users controller functions ***
 
 module.exports = app;
+module.exports.get_user_by_id = get_user_by_id;

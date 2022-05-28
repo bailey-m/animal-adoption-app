@@ -53,12 +53,16 @@ app.get('/', async (req, res) => {
     try{
         let pet_collection = await fs.get_collection_ids('Pets');
         let pets = [];
-        var date = req.query.date.replaceAll("-","");
+        if (req.query.date) {
+            var date = req.query.date.replace(/\//g,'');
+        } else {
+            var date = "";
+        }
         // Add an entry for each document
         for (var pet_id of pet_collection){
             let petDocument = await get_pet_by_id(pet_id);
-            temp = format_pet_info(petDocument, pet_id);
-            var tempDate = temp.date.replaceAll("/","");
+            let temp = format_pet_info(petDocument, pet_id);
+            var tempDate = temp.date.replace(/\//g,'');
             if (req.query.name == '' || req.query.name == temp.name){
                 if (req.query.species == '' || req.query.species == temp.species){
                     if (req.query.breed == '' || req.query.breed == temp.breed){
@@ -107,6 +111,11 @@ app.post('/', async (req, res) =>{
 app.delete('/', async (req, res) =>{
     try {
         await firestore.collection('Pets').doc(req.query.id).delete();
+        const matchQuery = firestore.collection('Match').where('PetID', '==', req.query.id);
+        const docs = await matchQuery.get();
+        for (let doc of docs.docs) {
+            await firestore.collection('Match').doc(doc.id).delete();
+        }
     } catch (err) {
         console.log(err);
     }
