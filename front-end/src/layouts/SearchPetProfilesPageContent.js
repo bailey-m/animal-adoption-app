@@ -18,6 +18,8 @@ import {API_URL} from '../index';
 import { NewPetForm } from '../components/NewPetForm';
 import { Input } from '@mui/material';
 import Typography from '@mui/material/Typography';
+import { ThemeProvider, Typography } from '@mui/material';
+import { headingTheme } from '../theme';
 
 const species = [
   'Dog',
@@ -151,8 +153,13 @@ export function SearchPetProfilesPageContent() {
 
   return (
     <>
+      <ThemeProvider theme={headingTheme}>
+        <Typography variant='h1'>Search Pets</Typography>
+      </ThemeProvider>
     <Box sx={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
+
       {renderAddNewPetButton()}
+
     </Box>
     <form>
 

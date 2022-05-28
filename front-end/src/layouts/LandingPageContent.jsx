@@ -8,6 +8,8 @@ import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlin
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import React, { useState, useEffect } from 'react';
 import ListAltOutlined from '@mui/icons-material/ListAltOutlined';
+import { ThemeProvider } from '@mui/material/styles';
+import { headingTheme, textTheme } from '../theme';
 
 const linkStyle = {
     textDecoration: "none",
@@ -49,6 +51,12 @@ export default function LandingPageContent(props) {
   
     return (
         <div>
+
+            <ThemeProvider theme={headingTheme}>
+                <Typography align='center' variant='h1'>Animal House</Typography>
+                <Typography align='center' variant='h2'>Find Your Forever Companion</Typography>
+            </ThemeProvider>
+
             <Box sx={{display: 'flex', justifyContent: 'flex-end', width: '100%', gap: '10px'}}>
                 { authState.isAuthenticated && !userInfo && 
                     <p>Loading user information...</p>
@@ -75,6 +83,7 @@ export default function LandingPageContent(props) {
                 mt: 10
             }}
             >
+              <ThemeProvider theme={textTheme}>
                 <Link to='/findamatch' style={linkStyle} sx={{gridColumn:'1'}}>
                     <Button  variant='contained' startIcon={<FavoriteBorderOutlinedIcon sx={iconStyle} />} >
                         Find a Match
@@ -95,9 +104,7 @@ export default function LandingPageContent(props) {
                         User Profile
                     </Button>
                 </Link>
-
-                
-            
+              </ThemeProvider>
             </Box>
         </div>
     );

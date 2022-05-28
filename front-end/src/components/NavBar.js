@@ -12,6 +12,8 @@ import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlin
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import PetsIcon from '@mui/icons-material/Pets';
 import Typography from '@mui/material/Typography';
+import { ThemeProvider } from '@mui/material';
+import { textTheme } from '../theme';
 
 
 const drawerWidth = 125;
@@ -78,17 +80,15 @@ export function NavBar() {
   }
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <Drawer
-        PaperProps={{
-            sx: {
-              backgroundColor: '#2196f3'
-            }
-        }}
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          '& .MuiDrawer-paper': {
+    <ThemeProvider theme={textTheme}>
+      <Box sx={{ display: 'flex' }}>
+        <Drawer
+          PaperProps={{
+              sx: {
+                backgroundColor: '#2196f3'
+              }
+          }}
+          sx={{
             width: drawerWidth,
             boxSizing: 'border-box',
           }
@@ -120,5 +120,6 @@ export function NavBar() {
         </List>
       </Drawer>
     </Box>
+</ThemeProvider>
   );
 }
