@@ -80,6 +80,16 @@ export function ItemList(props) {
 
   const handleCardClose = () => setCardOpen(false);
 
+  const renderItemTitle = (item) => {
+    if (item.title) {
+      return <Typography variant='body1'>{item.title}</Typography>
+    } else if (item.breed) {
+      return <Typography variant='body1'>{`${item.name} | ${item.species} | ${item.breed}`}</Typography>
+    } else {
+      return <Typography variant='body1'> {`${item.name} | ${item.species}`}</Typography>
+    }
+  }
+
   return (
     <>
     {!props.data && <CircularProgress /> }
@@ -93,7 +103,7 @@ export function ItemList(props) {
                 <Avatar src={item.image} />
               </ListItemAvatar>
               <ListItemText
-                primary={item.title || item.name}
+                primary={renderItemTitle(item)}
                 secondary={
                   <React.Fragment>
                     <Typography

@@ -19,10 +19,10 @@ import { Input } from '@mui/material';
 const species = [
     'Dog',
     'Cat',
+    'Bird',
     'Reptile',
     'Rabbit',
-    'Hamster',
-    'Guinea Pig'
+    'Rodent'
 ];
 
 const dogBreeds = [
@@ -58,6 +58,13 @@ const catBreeds = [
     'Maine Coon',
     'Persian',
     'Siamese',
+    'Other'
+];
+
+const birdBreeds = [
+    'Cockatiel',
+    'Parrot',
+    'Macaw',
     'Other'
 ];
 
@@ -158,6 +165,10 @@ export function NewPetForm(props) {
                 )}
                 <ListSubheader>Cats</ListSubheader>
                 {catBreeds.map(breed => 
+                    <MenuItem value={breed}>{breed}</MenuItem>
+                )}
+                <ListSubheader>Birds</ListSubheader>
+                {birdBreeds.map(breed => 
                     <MenuItem value={breed}>{breed}</MenuItem>
                 )}
                 </Select>
