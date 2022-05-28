@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React, {useState, useEffect} from 'react';
+import { useOktaAuth } from '@okta/okta-react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Toolbar from '@mui/material/Toolbar';
@@ -38,6 +39,45 @@ const logoStyle = {
 }
 
 export function NavBar() {
+  const { authState, oktaAuth } = useOktaAuth();
+  const [userInfo, setUserInfo] = useState(null);
+
+  useEffect(() => {
+    if (!authState || !authState.isAuthenticated) {
+      setUserInfo(null);
+    } else {
+      oktaAuth.getUser().then((info) => {
+        setUserInfo(info);
+      });
+    }
+  }, [authState, oktaAuth]); 
+
+  const renderFindAMatchButton = () => {
+    if (authState && authState.isAuthenticated && userInfo && userInfo.userType === 'user') {
+      return (
+          <Link to='/findamatch' style={linkStyle}>
+                <ListItem sx={listItemStyle} button>
+                    <FavoriteBorderOutlinedIcon sx={iconStyle}/>
+                    <Typography variant='subtitle2'>Find a Match</Typography>
+                </ListItem>
+            </Link>
+      )
+    }
+  }
+
+  const renderUserProfileButton = () => {
+    if (authState && authState.isAuthenticated && userInfo ) {
+      return (
+        <Link to='/profile' style={linkStyle}>
+        <ListItem sx={listItemStyle} button>
+            <PersonOutlineOutlinedIcon sx={iconStyle}/>
+            <Typography variant='subtitle2'>User Profile</Typography>
+        </ListItem>
+    </Link>
+      )
+    }
+  }
+
   return (
     <ThemeProvider theme={textTheme}>
       <Box sx={{ display: 'flex' }}>
@@ -49,50 +89,36 @@ export function NavBar() {
           }}
           sx={{
             width: drawerWidth,
-            flexShrink: 0,
-            '& .MuiDrawer-paper': {
-              width: drawerWidth,
-              boxSizing: 'border-box',
-            }
-          }}
-          variant="permanent"
-          anchor="left"
-        >
-          <Link to='/' style={linkStyle}>
-              <ListItem style={listItemStyle} button>
-                  <PetsIcon sx={logoStyle}/>
-                  <Typography variant='caption'>Animal House</Typography>
-              </ListItem>
-          </Link>
-          <Toolbar/>
-          <List>
-              <Link to='/findamatch' style={linkStyle}>
-                  <ListItem sx={listItemStyle} button>
-                      <FavoriteBorderOutlinedIcon sx={iconStyle}/>
-                      <Typography variant='subtitle2'>Find a Match</Typography>
-                  </ListItem>
-              </Link>
-              <Link to='/pets' style={linkStyle}>
-                  <ListItem sx={listItemStyle} button>
-                      <ListAltOutlinedIcon sx={iconStyle}/>
-                      <Typography variant='subtitle2'>Search Pets</Typography>
-                  </ListItem>
-              </Link>
-              <Link to='/news' style={linkStyle}>
-                  <ListItem sx={listItemStyle} button>
-                      <NewspaperOutlinedIcon sx={iconStyle}/>
-                      <Typography variant='subtitle2'>Recent News</Typography>
-                  </ListItem>
-              </Link>
-              <Link to='/profile' style={linkStyle}>
-                  <ListItem sx={listItemStyle} button>
-                      <PersonOutlineOutlinedIcon sx={iconStyle}/>
-                      <Typography variant='subtitle2'>User Profile</Typography>
-                  </ListItem>
-              </Link>
-          </List>
-        </Drawer>
-      </Box>
-    </ThemeProvider>
+            boxSizing: 'border-box',
+          }
+        }}
+        variant="permanent"
+        anchor="left"
+      >
+        <Link to='/'>
+            <ListItem style={listItemStyle} button>
+                <PetsIcon sx={logoStyle}/>
+            </ListItem>
+        </Link>
+        <Toolbar/>
+        <List>
+          {renderFindAMatchButton()}
+            <Link to='/pets' style={linkStyle}>
+                <ListItem sx={listItemStyle} button>
+                    <ListAltOutlinedIcon sx={iconStyle}/>
+                    <Typography variant='subtitle2'>Search Pets</Typography>
+                </ListItem>
+            </Link>
+            <Link to='/news' style={linkStyle}>
+                <ListItem sx={listItemStyle} button>
+                    <NewspaperOutlinedIcon sx={iconStyle}/>
+                    <Typography variant='subtitle2'>Recent News</Typography>
+                </ListItem>
+            </Link>
+            {renderUserProfileButton()}
+        </List>
+      </Drawer>
+    </Box>
+</ThemeProvider>
   );
 }
