@@ -90,7 +90,7 @@ export function ItemList(props) {
           <div key={item.id}>
             <ListItem alignItems="flex-start" button data-index={item.id} onClick={handleCardOpen}>
               <ListItemAvatar>
-                <Avatar src={item.photoUrl} />
+                <Avatar src={item.image} />
               </ListItemAvatar>
               <ListItemText
                 primary={item.title || item.name}

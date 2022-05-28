@@ -1,3 +1,5 @@
+const {Firestore, QuerySnapshot} = require('@google-cloud/firestore');
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('../lib/firestore');
@@ -86,7 +88,7 @@ app.post('/', async (req, res) =>{
             ],
             Name: req.query.Name,
             Age: Number(req.query.Age),
-            imageURL: "https://upload.wikimedia.org/wikipedia/commons/f/f0/Mops_oct09_cropped2.jpg"
+            imageURL: req.query.imageURL
         });
    } catch (err) {
        console.log(err);

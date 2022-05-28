@@ -16,7 +16,6 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { Input } from '@mui/material';
 
-
 const species = [
     'Dog',
     'Cat',
@@ -91,20 +90,42 @@ export function NewPetForm(props) {
     const [must_be_leashed, setMustBeLeashed] = useState("");
     const [picture, setPicture] = useState({preview: "", raw: ""});
 
+    const handleSubmit = (e) => {
+        
+        const cloudinaryUrl = 'https://api.cloudinary.com/v1_1/dic71ppnq/upload'
+        const file = picture.raw;
+        const formData = new FormData();
+
+        formData.append("file", file);
+        formData.append("upload_preset", "tyogpv4o");
+
+        (async() => { 
+            fetch(cloudinaryUrl, {
+                method: "POST",
+                body: formData
+            })
+            .then((response) => {
+                return response.json();
+            })
+            .then((imageData) => {
+                axios.post(`${API_URL}/pets`, null, {params: {
+                    Name: name,
+                    Age: age, 
+                    Breed: breed, 
+                    Species: animal, 
+                    Description: description,
+                    Good_With_Animals: good_with_animals,
+                    Good_With_Children: good_with_children,
+                    Must_Be_Leashed: must_be_leashed,
+                    imageURL: imageData.url
+                }}); window.location.reload(false)
+            });
+        })();
+    };
+
     return (
         <Box sx={style}>
             <FormControl sx={{width: 400}}>
-            <form onSubmit = {() => {axios.post(`${API_URL}/pets`, null, {params: {
-                Name: name,
-                Age: age, 
-                Breed: breed, 
-                Species: animal, 
-                Description: description,
-                Good_With_Animals: good_with_animals,
-                Good_With_Children: good_with_children,
-                Must_Be_Leashed: must_be_leashed,
-                }}); window.location.reload(false)}}>
-
             <Typography>Add New Pet</Typography>
             <TextField required id="outlined-basic" label="Name" variant="outlined" value={name} sx={{width: 200 }} 
                 onChange={(e) => {setName(e.target.value);}}/>
@@ -154,8 +175,8 @@ export function NewPetForm(props) {
             <Input type="file" id="upload_button" onChange={(e) => {setPicture({
                 preview: URL.createObjectURL(e.target.files[0]),
                 raw: e.target.files[0]});}}/>
-            <Button variant='contained' type='submit'>Add Pet</Button>
-            </form>
+            <Button variant='contained' onClick={handleSubmit}>Add Pet</Button>
+            
             </FormControl>
             <InputLabel htmlFor="upload_button">{picture.preview ? (<img src={picture.preview} alt="dummy" width="100" height="100" />) : ''}</InputLabel>
         </Box>
