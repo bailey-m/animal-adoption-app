@@ -5,9 +5,10 @@ import { API_URL } from '../index';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CloseIcon from '@mui/icons-material/Close';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import { textTheme } from '../theme';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { AccordionSummary, Accordion, Typography, ListItemText, ListItemIcon, ListItem, List, 
-    Divider, Chip, CardMedia, CardContent, Card, Button, Box, AccordionDetails } from '@mui/material';
+    Divider, Chip, CardMedia, CardContent, Card, Button, Box, AccordionDetails, ThemeProvider } from '@mui/material';
 
 /* 
 PASS IN DATABASE INFORMATION AS PROP JSON
@@ -139,6 +140,7 @@ function PetCard(props) {
                 alt={props.petInfo.name}
             />
             <CardContent >
+            <ThemeProvider theme={textTheme}>
                 <Box sx={{
                     display: 'flex',
                     flexWrap: 'wrap',
@@ -192,6 +194,7 @@ function PetCard(props) {
                     {renderAccordion()}
 
                 </Box>
+                </ThemeProvider>
             </CardContent>
         </Card>
     );

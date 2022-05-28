@@ -12,6 +12,8 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import NewsCard from './NewsCard';
 import PetCard from './PetCard';
+import { ThemeProvider } from '@mui/material';
+import { textTheme } from '../theme';
 import { API_URL } from '../index';
 
 const style = {
@@ -85,6 +87,7 @@ export function ItemList(props) {
     {!props.data && <CircularProgress /> }
     {props.data && (
       <>
+      <ThemeProvider theme={textTheme}>
       <List sx={{ width: 'fit-content', bgcolor: 'background.paper'}}>
         {props.data.map(item =>
           <div key={item.id}>
@@ -111,6 +114,8 @@ export function ItemList(props) {
           </div>
         )}
       </List>
+
+      </ThemeProvider>
       <ItemCard open={cardOpen} onClose={handleCardClose} itemId={selectedItemId} data={props.data} card={props.card} userInfo={props.userInfo}/>
       </>
     )}

@@ -13,6 +13,8 @@ import { ItemList } from '../components/ItemList';
 import axios from 'axios';
 import {API_URL} from '../index';
 import { NewPetForm } from '../components/NewPetForm';
+import { ThemeProvider, Typography } from '@mui/material';
+import { headingTheme } from '../theme';
 
 const species = [
   'Dog',
@@ -124,8 +126,13 @@ export function SearchPetProfilesPageContent() {
   // TODO insert search/filters with Search button that queries based on filters
   return (
     <>
+      <ThemeProvider theme={headingTheme}>
+        <Typography variant='h1'>Search Pets</Typography>
+      </ThemeProvider>
     <Box sx={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
+
       {renderAddNewPetButton()}
+
     </Box>
     <form>
     <TextField id="outlined-basic" label="Name" variant="outlined" value={name} sx={{width: 200 }} 
