@@ -1,12 +1,8 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
 import axios from 'axios';
 import {API_URL} from '../index';
 import {useState} from 'react';
-import { FormControl } from '@mui/material';
+import { FormControl, Box, Button, TextField, Typography } from '@mui/material';
 
 const style = {
     position: 'absolute',

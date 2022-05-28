@@ -1,18 +1,19 @@
-import React, {useState} from 'react';
-import CircularProgress from '@mui/material/CircularProgress';
+import React, {useState, useEffect} from 'react';
+import { useOktaAuth } from '@okta/okta-react';
 import axios from 'axios';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import Divider from '@mui/material/Divider';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import Avatar from '@mui/material/Avatar';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
 import NewsCard from './NewsCard';
 import PetCard from './PetCard';
+import { textTheme } from '../theme';
 import { API_URL } from '../index';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { CircularProgress, List, ListItem, Divider, ListItemText, ListItemAvatar, 
+  Avatar, Typography, Box, Modal, ThemeProvider } from "@mui/material";
+
+const logoStyle = {
+  color: 'gray',
+  marginTop: '10px',
+  fontSize: '30px'
+}
 
 const style = {
   position: 'absolute',
@@ -72,6 +73,18 @@ export function ItemCard(props) {
 export function ItemList(props) {
   const [cardOpen, setCardOpen] = useState(false);
   const [selectedItemId, setSelectedItemId] = useState(null);
+  const { authState, oktaAuth } = useOktaAuth();
+  const [userInfo, setUserInfo] = useState(null);
+
+  useEffect(() => {
+    if (!authState || !authState.isAuthenticated) {
+      setUserInfo(null);
+    } else {
+      oktaAuth.getUser().then((info) => {
+        setUserInfo(info);
+      });
+    }
+  }, [authState, oktaAuth]); 
 
   const handleCardOpen = (event) => {
     setCardOpen(true);
@@ -79,6 +92,7 @@ export function ItemList(props) {
   }
 
   const handleCardClose = () => setCardOpen(false);
+
 
   const renderItemTitle = (item) => {
     if (item.title) {
@@ -90,11 +104,29 @@ export function ItemList(props) {
     }
   }
 
+
+
+const renderDeleteIcon = (item) => {
+  if (authState && authState.isAuthenticated && userInfo && userInfo.userType === 'admin') {
+    return (
+      <>
+    <DeleteIcon sx={logoStyle} onClick={(e) => {e.stopPropagation();
+
+      if (props.card === 'PetCard'){
+        axios.delete(`${API_URL}/pets?` +
+        `id=${item.id}`); window.location.reload(false)}
+
+      if (props.card === 'NewsCard'){
+        axios.delete(`${API_URL}/news?` +
+        `id=${item.id}`); window.location.reload(false)
+      }}}/></>)}};
+
   return (
     <>
     {!props.data && <CircularProgress /> }
     {props.data && (
       <>
+      <ThemeProvider theme={textTheme}>
       <List sx={{ width: 'fit-content', bgcolor: 'background.paper'}}>
         {props.data.map(item =>
           <div key={item.id}>
@@ -114,13 +146,17 @@ export function ItemList(props) {
                       {item.description}
                     </Typography>
                   </React.Fragment>
+                  
                 }
-              />
-            </ListItem>
-            <Divider/>
+              />              
+              {renderDeleteIcon(item)}
+          </ListItem>
+          <Divider/>
           </div>
         )}
       </List>
+
+      </ThemeProvider>
       <ItemCard open={cardOpen} onClose={handleCardClose} itemId={selectedItemId} data={props.data} card={props.card} userInfo={props.userInfo}/>
       </>
     )}

@@ -1,3 +1,5 @@
+const {Firestore, QuerySnapshot} = require('@google-cloud/firestore');
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express.Router();
@@ -59,6 +61,14 @@ app.post('/', async (req, res) =>{
             Title: req.query.Title,
             imageURL: 'https://upload.wikimedia.org/wikipedia/commons/f/f0/Mops_oct09_cropped2.jpg'
         });
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+app.delete('/', async (req, res) =>{
+    try {
+        await firestore.collection('News_Item').doc(req.query.id).delete();
     } catch (err) {
         console.log(err);
     }

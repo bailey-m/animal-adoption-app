@@ -1,20 +1,10 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import Select from '@mui/material/Select';
-import ListSubheader from '@mui/material/ListSubheader';
-import MenuItem from '@mui/material/MenuItem';
-import Typography from '@mui/material/Typography';
 import axios from 'axios';
 import {API_URL} from '../index';
 import {useState} from 'react';
-import Checkbox from '@mui/material/Checkbox';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { Input } from '@mui/material';
+import { Box, Button, TextField, FormControl, InputLabel, Select, ListSubheader, 
+    MenuItem, Typography, Checkbox, FormGroup, FormControlLabel, Input} from '@mui/material';
+
 
 const species = [
     'Dog',

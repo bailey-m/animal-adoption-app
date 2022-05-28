@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import CircularProgress from "@mui/material/CircularProgress";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
 import { ItemCard } from "./ItemList";
 import SimplePetCard from "./SimplePetCard";
+import { CircularProgress, List, ListItem } from "@mui/material";
 
 export function UserLikedList(props) {
   const [cardOpen, setCardOpen] = useState(false);

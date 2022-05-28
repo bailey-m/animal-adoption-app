@@ -1,20 +1,14 @@
 import React, {useState, useEffect} from 'react';
 import { useOktaAuth } from '@okta/okta-react';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
+import axios from 'axios';
+import { API_URL } from '../index';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import Chip from '@mui/material/Chip';
 import CloseIcon from '@mui/icons-material/Close';
-import Divider from '@mui/material/Divider';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Typography from '@mui/material/Typography';
+import { textTheme } from '../theme';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { AccordionSummary, Accordion, Typography, ListItemText, ListItemIcon, ListItem, List, 
+    Divider, Chip, CardMedia, CardContent, Card, Button, Box, AccordionDetails, ThemeProvider } from '@mui/material';
 
 /* 
 PASS IN DATABASE INFORMATION AS PROP JSON
@@ -35,6 +29,7 @@ function PetCard(props) {
 
   const { authState, oktaAuth } = useOktaAuth();
   const [userInfo, setUserInfo] = useState(null);
+  const [matches, setMatches] = useState([]);
 
   useEffect(() => {
     if (!authState || !authState.isAuthenticated) {
@@ -44,9 +39,37 @@ function PetCard(props) {
         setUserInfo(info);
       });
     }
-  }, [authState, oktaAuth]); 
+  }, [authState, oktaAuth]);
+
+  useEffect(() => {
+    axios.get(`${API_URL}/match/${props.petInfo.id}/users`).then( (response) => {
+        setMatches(response.data);
+      });
+  })
+
+    const renderAccordion = () => {
+        if (authState && authState.isAuthenticated && userInfo && userInfo.userType === 'admin') {
+            return (
+                <>
+                    <Accordion sx={{width:'100%'}}>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                        >
+                            <Typography>Users Who Like This Pet: {matches.length}</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            {matches.map(user => 
+                                <Typography>{user.name}: {user.email}</Typography>
+                                )}
+                        </AccordionDetails>
+                    </Accordion>
+                </>
+            );
+        }
+    }
 
     const renderButtons = () => {
+      
         if (authState && authState.isAuthenticated && userInfo && userInfo.userType === 'user' && !props.user) {
             return (
                 <>
@@ -55,7 +78,7 @@ function PetCard(props) {
                     startIcon={<FavoriteIcon />}
                     color='success'
                     variant='contained'
-                    sx={{gridRow:'9', gridColumn:'span 3'}}
+                    sx={{}}
                     >Like this {props.petInfo.species}
                 </Button>
         
@@ -64,7 +87,7 @@ function PetCard(props) {
                     startIcon={<CloseIcon />}
                     color='error'
                     variant='contained'
-                    sx={{gridRow:'9', gridColumn:'span 3'}}
+                    sx={{}}
                     >Not for me
                 </Button>
                 </>
@@ -81,24 +104,31 @@ function PetCard(props) {
     }
     
     const availability = () => {
-        const gridInfo = {gridRow:'5', gridColumnStart:'3', gridColumnEnd:'5'};
-
+        let chip;
         switch (props.petInfo.availability) {
             case 'Available':
-                return <Chip label='Available' color='success' sx={gridInfo}/>
+                chip = <Chip label='Available' color='success'/>
+                break;
 
             case 'Not Available':
-                return <Chip label='Not Available' color='error' sx={gridInfo}/>
+                chip = <Chip label='Not Available' color='error'/>
+                break;
 
             case 'Pending':
-                return <Chip label='Pending' color='warning' sx={gridInfo} />
+                chip = <Chip label='Pending' color='warning' />
+                break;
 
             case 'Adopted':
-                return <Chip label='Adopted' color='primary' sx={gridInfo} />
-            
+                chip = <Chip label='Adopted' color='primary' />
+                break;
+                
             default:
-                return <Chip label='Status Unknown' color='secondary' sx={gridInfo} />
+                chip = <Chip label='Status Unknown' color='secondary' />
         }
+
+        return (
+            <Box sx={{width:'100%', display:'flex', justifyContent:'center'}}>{chip}</Box>
+        )
 
     }
 
@@ -111,27 +141,28 @@ function PetCard(props) {
                 alt={props.petInfo.name}
             />
             <CardContent >
+            <ThemeProvider theme={textTheme}>
                 <Box sx={{
-                    display: 'grid',
-                    gap: .5,
-                    gridTemplateRows: 'repeat(9, 1fr)',
-                    gridTemplateColumns: 'repeat(6, 1fr)',
-                    alignItems: 'center'
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    justifyContent: 'space-evenly',
+                    rowGap:2
                 }}>
                 
-                    <Typography align='center' variant='h5' sx={{gridRow:'1', gridColumnStart:'2', gridColumnEnd:'6' }} >{props.petInfo.name}</Typography>
+                    <Typography align='center' variant='h5' sx={{width:'100%' }} >{props.petInfo.name}</Typography>
                     
-                    <Typography align='center' variant='subtitle1' sx={{gridRow:'2', gridColumnStart:'1', gridColumnEnd:'4' }} >{props.petInfo.age}</Typography>
+                    <Typography align='center' variant='subtitle1' sx={{width:'49%'}} >{props.petInfo.age}</Typography>
                          
-                    <Divider orientation='vertical' sx={{gridRow:'2', gridColumn:'3'}} />    
+                    <Divider flexItem orientation='vertical' sx={{width:'1%'}} />
                         
                     <Typography align='center' variant='subtitle1' sx={{gridRow:'2', gridColumnStart:'4', gridColumn:'span 3'}} >{props.petInfo.breed || 'N/A'}</Typography>                   
+
                     
                     <Typography 
                         variant='body2'
                         align='center'
                         color='text.secondary' 
-                        sx={{gridRowStart:'3', gridRowEnd:'5', gridColumnStart:'2', gridColumnEnd:'6'}}
+                        sx={{width:'100%'}}
                     >
                         {props.petInfo.description}
                     </Typography>
@@ -139,7 +170,7 @@ function PetCard(props) {
                     {availability()}
                                         
                     <List
-                        sx={{gridRowStart:'6', gridRowEnd:'9', gridColumnStart:'2', gridColumnEnd:'6', mx:'auto'}}
+                        sx={{width:'75%'}}
                     >
                         <ListItem disablePadding>
                             <ListItemIcon>
@@ -160,10 +191,12 @@ function PetCard(props) {
                             <ListItemText primary='Must be leashed at all times' primaryTypographyProps={{variant:'subtitle2'}}/>
                         </ListItem>
                     </List>
-                    
+
                     {renderButtons()}
-                    
+                    {renderAccordion()}
+
                 </Box>
+                </ThemeProvider>
             </CardContent>
         </Card>
     );

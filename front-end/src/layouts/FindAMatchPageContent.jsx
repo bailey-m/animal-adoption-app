@@ -2,8 +2,9 @@ import * as React from 'react';
 import PetCard from '../components/PetCard';
 import axios from 'axios';
 import { API_URL } from '../index';
-import { CircularProgress, keyframes, Box, Typography } from '@mui/material';
+import { CircularProgress, keyframes, Box, Typography, ThemeProvider } from '@mui/material';
 import styled from '@mui/material/styles/styled';
+import { headingTheme, textTheme } from '../theme';
 import { useOktaAuth } from '@okta/okta-react';
 
 // Exit animation
@@ -42,13 +43,6 @@ function setAnimation(cardUp) {
   }
 }
 
-// Box to apply animations to
-const Holder = styled(Box)(({cardUp}) => ({
-  animation: setAnimation(cardUp),
-  alignItems: "center",
-  justifyContent: "center",
-  display: "flex"
-}));
 
 
 export function FindAMatchPageContent(props) {
@@ -64,40 +58,38 @@ export function FindAMatchPageContent(props) {
       if (!authState || !authState.isAuthenticated) {
         setUser(null);
       } else {
-        await oktaAuth.getUser().then(async(info) => {
-          setUser(info);
-          let userMatches = await getUserMatches(info);
-          await getPets(userMatches);
-        });
+        let info = await oktaAuth.getUser();
+        setUser(info);
+        const userMatches = await getUserMatches(info);
+        await getPets(userMatches);
       }
     })();
   }, [authState, oktaAuth]);
 
   const getUserMatches = async(user) => {
-    return await axios
-    .get(
-      `${API_URL}/match/${user.sub}`
-    )
-    .then((response) => {
+
+    try {
+      const response = await axios.get(`${API_URL}/match/${user.sub}/pets`)
+      console.log('user matches: ', response.data);
       return response.data;
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+    } catch (err) {
+      console.log(err);
+    }
   }
   
   const getPets = async(userMatches) => {
-    await axios.get(`${API_URL}/pets`)
-    .then((response) => {
+    console.log('userMatches in getPets: ', userMatches)
+    try {
+      const response = await axios.get(`${API_URL}/pets?name&species&breed&good_with_animals&good_with_children&safe_off_leash&date`);
       let result = response.data;
+      console.log('all pets: ', result);
       for (let match of userMatches) {
         result = result.filter(pet => pet.id !== match.id);
       }
       setData(result);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   const handleLike = async () => {
@@ -122,13 +114,38 @@ export function FindAMatchPageContent(props) {
     }, 600)
   }
 
-  
+  // Box to apply animations to
+const Holder = styled(Box)(({cardUp}) => ({
+  animation: setAnimation(cardUp),
+  alignItems: "center",
+  justifyContent: "center",
+  display: "flex"
+}));
+
 
   return (
     <>
-      {!data && <Box sx={{display: "flex", justifyContent:"center"}}><CircularProgress size="200px" /></Box>}
-      {data && index < data.length && <Holder cardUp={cardUp}><PetCard petInfo={data[index]} handleClose={handleClose} handleLike={handleLike} petId={data[index].id} /></Holder>}
-      {data && index >= data.length && <Box sx={{display: "flex", alignItems:'center', justifyContent:'center'}}><Typography variant='h3'>Out of pets!</Typography></Box>}
+      <Box sx={{display: "flex", justifyContent:"center", flexWrap:"wrap"}}>
+        <ThemeProvider theme={headingTheme}>
+          <Typography variant='h1'>Find A Match</Typography>
+        </ThemeProvider>
+        <Box sx={{flexBasis:"100%", height:"0"}}></Box>
+        {!data && 
+          <Box sx={{display:"flex", justifyContent:"center"}}>
+            <CircularProgress size="200px" />
+          </Box>}
+        {data && index < data.length && 
+          <Holder cardUp={cardUp}>
+            <PetCard petInfo={data[index]} handleClose={handleClose} handleLike={handleLike} />
+          </Holder>}
+        {data && index >= data.length && 
+          <Box sx={{display:"flex", alignItems:"flex-end", height:"15rem"}}>
+            <ThemeProvider theme={textTheme}>
+              <Typography variant='h3'>Out of pets!</Typography>
+            </ThemeProvider>
+          </Box>}
+      </Box>
+      
     </>
   );  
 }

@@ -1,18 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import { useOktaAuth } from '@okta/okta-react';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import Select from '@mui/material/Select';
-import ListSubheader from '@mui/material/ListSubheader';
-import MenuItem from '@mui/material/MenuItem';
-import Modal from '@mui/material/Modal';
 import { ItemList } from '../components/ItemList';
 import axios from 'axios';
 import {API_URL} from '../index';
 import { NewPetForm } from '../components/NewPetForm';
+import { ThemeProvider, Typography, Input, Modal, MenuItem, ListSubheader, FormControlLabel, FormGroup, 
+  Checkbox, Select, InputLabel, FormControl, TextField, Button, Box } from '@mui/material';
+import { headingTheme } from '../theme';
 
 const species = [
   'Dog',
@@ -82,6 +76,10 @@ export function SearchPetProfilesPageContent() {
   const [name, setName] = useState("");
   const [breed, setBreed] = useState("");
   const [animal, setAnimal] = useState("");
+  const [good_with_animals, setGoodWithAnimals] = useState('');
+  const [good_with_children, setGoodWithChildren] = useState('');
+  const [safe_off_leash, setSafeOffLeash] = useState('');
+  const [date, setDate] = useState('');
 
   const handleCardOpen = () => setCardOpen(true);
   const handleCardClose = () => setCardOpen(false);
@@ -103,7 +101,11 @@ export function SearchPetProfilesPageContent() {
     axios.get(`${API_URL}/pets?` + 
     `name=${name}&` +
     `species=${animal}&` +
-    `breed=${breed}`)
+    `breed=${breed}&` +
+    `good_with_animals=${good_with_animals}&` +
+    `good_with_children=${good_with_children}&` +
+    `safe_off_leash=${safe_off_leash}&` +
+    `date=${date}`)
     .then((response) => {
       setData(response.data);
     })
@@ -124,15 +126,21 @@ export function SearchPetProfilesPageContent() {
     }
   }
 
-  // TODO insert search/filters with Search button that queries based on filters
   return (
     <>
+      <ThemeProvider theme={headingTheme}>
+        <Typography variant='h1'>Search Pets</Typography>
+      </ThemeProvider>
     <Box sx={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
+
       {renderAddNewPetButton()}
+
     </Box>
     <form>
+
     <TextField id="outlined-basic" label="Name" variant="outlined" value={name} sx={{width: 200 }} 
                 onChange={(e) => {setName(e.target.value);}}/>
+
     <FormControl sx={{width: 200}}>
         <InputLabel id="demo-simple-select-label">Species</InputLabel>
         <Select
@@ -167,15 +175,35 @@ export function SearchPetProfilesPageContent() {
             )}
       </Select>
     </FormControl>
-
+    <br/><br/>
+    <FormGroup>
+    <FormControl sx={{width: 200 }}>
+    <Typography>Pet Added After</Typography>          
+      <Input type="date" id="date" value={date} onChange={(e) => {setDate(e.target.value);}}/>
+    </FormControl>
+    </FormGroup>
+    <br/>
+      <FormControlLabel control={<Checkbox checked={good_with_animals} onChange={(e) => {setGoodWithAnimals(e.target.checked);}}/>} label="Good With Animals"/>
+      <FormControlLabel control={<Checkbox checked={good_with_children} onChange={(e) => {setGoodWithChildren(e.target.checked);}}/>} label="Good With Children" />
+      <FormControlLabel control={<Checkbox checked={safe_off_leash} onChange={(e) => {setSafeOffLeash(e.target.checked);}}/>} label="Safe Off Leash" />
+    <br/><br/>
+    <FormGroup>
+    <FormControl sx={{width: 200 }}>
     <Button variant='contained' onClick={() => {
       axios.get(`${API_URL}/pets?` + 
-        `name=${name}&` +
-        `species=${animal}&` +
-        `breed=${breed}`
+      `name=${name}&` +
+      `species=${animal}&` +
+      `breed=${breed}&` +
+      `good_with_animals=${good_with_animals}&` +
+      `good_with_children=${good_with_children}&` +
+      `safe_off_leash=${safe_off_leash}&` +
+      `date=${date}`
         ).then((response) => {
         setData(response.data);
       })}}>Search</Button>
+    </FormControl>
+    </FormGroup>
+    <Typography>______________________</Typography>
     </form>
     <Box>
       <ItemList sx={{margin: 'auto'}} data={data} card='PetCard' userInfo={userInfo}/>
