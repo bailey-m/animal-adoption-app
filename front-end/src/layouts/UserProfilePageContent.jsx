@@ -68,11 +68,8 @@ export default function UserProfilePage() {
       >
 
         <ThemeProvider theme={headingTheme}>
-          <Typography sx={{gridRow: '1', gridColumn:'span 4'}} align="center" variant='h2'>User Name</Typography>
+          <Typography sx={{gridRow: '1', gridColumn:'span 4'}} align="center" variant='h2'>{userInfo ? userInfo.name : ''}</Typography>
           <Typography sx={{gridRowStart: '2', gridColumn:'3/5' }} align="center" variant="h3">Liked Pets</Typography>
-        </ThemeProvider>
-        <ThemeProvider theme={textTheme}>
-          <Typography sx={{gridRowStart: '3', gridColumn:'span 2'}} variant='body1'>User info goes here</Typography>
         </ThemeProvider>
         {renderLikedPets()}
 

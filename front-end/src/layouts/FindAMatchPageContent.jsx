@@ -127,7 +127,7 @@ const Holder = styled(Box)(({cardUp}) => ({
     <>
       <Box sx={{display: "flex", justifyContent:"center", flexWrap:"wrap"}}>
         <ThemeProvider theme={headingTheme}>
-          <Typography variant='h1'>Find A Match</Typography>
+          <Typography variant='h2'>Find A Match</Typography>
         </ThemeProvider>
         <Box sx={{flexBasis:"100%", height:"0"}}></Box>
         {!data && 
