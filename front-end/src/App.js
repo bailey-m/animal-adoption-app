@@ -21,7 +21,7 @@ const App = () => {
   return (
     <Security oktaAuth={oktaAuth} restoreOriginalUri={restoreOriginalUri}>
         <Routes>
-            <Route path='/' element={<PageContainer content={<LandingPageContent />} />} />
+            <Route path='/' element={<PageContainer landingPage content={<LandingPageContent />} />} />
             <Route path='/login/callback' element={<LoginCallback />}/>
             <Route path='/findamatch' element={<PageContainer content={<FindAMatchPageContent />} />} />
             <Route path='/pets' element={<PageContainer content={<SearchPetProfilesPageContent/>} />} />

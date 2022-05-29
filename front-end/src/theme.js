@@ -3,7 +3,7 @@ import { createTheme } from '@mui/material/styles';
 export const headingTheme = createTheme({
     typography: {
         fontFamily: [
-            'Trade Winds', 
+            'Tahoma', 
             'normal',
         ].join(','),
     },
@@ -12,7 +12,7 @@ export const headingTheme = createTheme({
 export const textTheme = createTheme({
     typography: {
         fontFamily: [
-            'Special Elite',
+            'Tahoma',
             'normal',
         ].join(','),
     },

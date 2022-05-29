@@ -132,7 +132,7 @@ const renderDeleteIcon = (item) => {
           <div key={item.id}>
             <ListItem alignItems="flex-start" button data-index={item.id} onClick={handleCardOpen}>
               <ListItemAvatar>
-                <Avatar src={item.image} />
+                <Avatar src={item.image || item.imageURL} />
               </ListItemAvatar>
               <ListItemText
                 primary={renderItemTitle(item)}

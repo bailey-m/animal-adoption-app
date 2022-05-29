@@ -69,7 +69,7 @@ export function NewsPageContent() {
   return (
     <>
     <ThemeProvider theme={headingTheme}>
-        <Typography variant='h1'>Recent News</Typography>
+        <Typography variant='h2'>Recent News</Typography>
       </ThemeProvider>
     <Box sx={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
       {renderAddNewsPostButton()}

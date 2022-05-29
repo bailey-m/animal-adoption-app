@@ -1,21 +1,8 @@
-import {Link} from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
-import NewspaperOutlinedIcon from '@mui/icons-material/NewspaperOutlined';
-import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
-import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import React, { useState, useEffect } from 'react';
-import ListAltOutlined from '@mui/icons-material/ListAltOutlined';
 import { Typography, ThemeProvider, Button, Box } from '@mui/material';
 import { headingTheme, textTheme } from '../theme';
-
-const linkStyle = {
-    textDecoration: "none",
-    color: "white",
-};
-
-const iconStyle = {
-    color: 'white'
-};
+import CssBaseline from '@mui/material/CssBaseline';
 
 export default function LandingPageContent(props) {
     const { authState, oktaAuth } = useOktaAuth();
@@ -45,61 +32,44 @@ export default function LandingPageContent(props) {
           <div>Loading...</div>
         );
     }
-  
-    return (
-        <div>
+    
+    const backgroundImageUrl = 'https://res.cloudinary.com/dic71ppnq/image/upload/v1653854549/c320862aa739ece6589435eafc0af1cdb8e124b299d8fd9d3f5cdf20ded22797_xw31fc.jpg';
+    const backgroundStyle = {
+        backgroundImage: `url(${backgroundImageUrl})`,
+        backgroundPosition: 'center',
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        width: '100vw',
+        height: '100vh',
+        backdropFilter: 'contrast(0.4)'
+    };
 
+    return (
+        <>
+        <CssBaseline/>
+        <div style={backgroundStyle}>
+        <Box sx={{marginRight: '20px'}}>
             <ThemeProvider theme={headingTheme}>
-                <Typography align='center' variant='h1'>Animal House</Typography>
-                <Typography align='center' variant='h2'>Find Your Forever Companion</Typography>
+                <Typography align='right' variant='h1' color='white'>Animal House</Typography>
+                <Typography align='right' variant='h2' color='white'>Find Your Forever Companion</Typography>
             </ThemeProvider>
             <ThemeProvider theme={textTheme}>
-                <Box sx={{display: 'flex', justifyContent: 'flex-end', width: '100%', gap: '10px'}}>
+                <Box sx={{display: 'flex', justifyContent: 'flex-end', width: '100%', gap: '10px', marginTop: '20px'}}>
                     { authState.isAuthenticated && !userInfo && 
-                        <p>Loading user information...</p>
+                        <Typography variant='body1' color='white'>Loading user information...</Typography>
                     }
 
                     {authState.isAuthenticated && userInfo && 
-                        <p> Welcome back, {userInfo.name} </p>
+                        <Typography variant='body1' color='white'>Welcome back, {userInfo.name}! </Typography>
                     }
                     { !authState.isAuthenticated 
                         ? (<Button id="login-button" variant={'contained'} onClick={login}>Login</Button>) 
                         : (<Button variant={'contained'} onClick={logout}>Logout</Button>) 
                     }
                 </Box>
-
-                <Box
-                    sx={{
-                        display:'grid',
-                        gridTemplateColumns: 'repeat(4, 1fr)',
-                        gap: 15,
-                        width: .75,
-                        margin: 'auto',
-                        mt: 10
-                    }}
-                    >
-                    <Link to='/findamatch' style={linkStyle} sx={{gridColumn:'1'}}>
-                        <Button  variant='contained' startIcon={<FavoriteBorderOutlinedIcon sx={iconStyle} />} >
-                            Find a Match
-                        </Button>
-                    </Link>
-                    <Link to='/pets' style={linkStyle} sx={{gridColumn:'2'}}>
-                        <Button variant='contained' startIcon={<ListAltOutlined sx={iconStyle} />} >
-                            Search Pets
-                        </Button>
-                    </Link>
-                    <Link to='/news' style={linkStyle} sx={{gridColumn:'3'}}>
-                        <Button variant='contained' startIcon={<NewspaperOutlinedIcon sx={iconStyle} />} >
-                            Recent News
-                        </Button>
-                    </Link>
-                    <Link to='/profile' style={linkStyle} sx={{gridColumn:'4'}}>
-                        <Button variant='contained' startIcon={<PersonOutlineOutlinedIcon sx={iconStyle} />} >
-                            User Profile
-                        </Button>
-                    </Link>
-                </Box>
             </ThemeProvider>
+        </Box>
         </div>
+        </>
     );
 }

@@ -6,7 +6,7 @@ import {API_URL} from '../index';
 import { NewPetForm } from '../components/NewPetForm';
 import { ThemeProvider, Typography, Input, Modal, MenuItem, ListSubheader, FormControlLabel, FormGroup, 
   Checkbox, Select, InputLabel, FormControl, TextField, Button, Box } from '@mui/material';
-import { headingTheme } from '../theme';
+import { headingTheme, textTheme } from '../theme';
 
 const species = [
   'Dog',
@@ -129,8 +129,9 @@ export function SearchPetProfilesPageContent() {
   return (
     <>
       <ThemeProvider theme={headingTheme}>
-        <Typography variant='h1'>Search Pets</Typography>
+        <Typography variant='h2'>Search Pets</Typography>
       </ThemeProvider>
+      <ThemeProvider theme={textTheme}>
     <Box sx={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
 
       {renderAddNewPetButton()}
@@ -208,6 +209,7 @@ export function SearchPetProfilesPageContent() {
     <Box>
       <ItemList sx={{margin: 'auto'}} data={data} card='PetCard' userInfo={userInfo}/>
     </Box>
+    </ThemeProvider>
     </>
   );
 }
