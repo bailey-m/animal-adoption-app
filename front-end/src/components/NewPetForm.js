@@ -115,7 +115,13 @@ export function NewPetForm(props) {
                     Good_With_Children: good_with_children,
                     Must_Be_Leashed: must_be_leashed,
                     imageURL: imageData.url
-                }}); window.location.reload(false)
+                }}); 
+                axios.post(`${API_URL}/news`, null, {params: {
+                    Title: `New Arrival! ${name} is now available!`,
+                    Description: description,
+                    imageURL: imageData.url
+                }});
+                window.location.reload(false)
             });
         })();
     };

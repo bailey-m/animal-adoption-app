@@ -59,7 +59,7 @@ app.post('/', async (req, res) =>{
             Date: Firestore.Timestamp.now(),
             Description: req.query.Description,
             Title: req.query.Title,
-            imageURL: 'https://upload.wikimedia.org/wikipedia/commons/f/f0/Mops_oct09_cropped2.jpg'
+            imageURL: req.query.imageURL
         });
     } catch (err) {
         console.log(err);
