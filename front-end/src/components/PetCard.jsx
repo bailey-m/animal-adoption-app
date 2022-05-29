@@ -133,7 +133,7 @@ function PetCard(props) {
     }
 
     return (
-        <Card sx={{ maxWidth: 500 }} raised>
+        <Card sx={{ height: 500, maxWidth: 500, overflowY: 'scroll' }} >
             <CardMedia
                 component='img'
                 height='auto'
@@ -155,7 +155,8 @@ function PetCard(props) {
                          
                     <Divider flexItem orientation='vertical' sx={{width:'1%'}} />
                         
-                    <Typography align='center' variant='subtitle1' sx={{width:'49%'}} >{props.petInfo.breed}</Typography>                   
+                    <Typography align='center' variant='subtitle1' sx={{gridRow:'2', gridColumnStart:'4', gridColumn:'span 3'}} >{props.petInfo.breed || 'N/A'}</Typography>                   
+
                     
                     <Typography 
                         variant='body2'

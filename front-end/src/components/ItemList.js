@@ -73,6 +73,18 @@ export function ItemCard(props) {
 export function ItemList(props) {
   const [cardOpen, setCardOpen] = useState(false);
   const [selectedItemId, setSelectedItemId] = useState(null);
+  const { authState, oktaAuth } = useOktaAuth();
+  const [userInfo, setUserInfo] = useState(null);
+
+  useEffect(() => {
+    if (!authState || !authState.isAuthenticated) {
+      setUserInfo(null);
+    } else {
+      oktaAuth.getUser().then((info) => {
+        setUserInfo(info);
+      });
+    }
+  }, [authState, oktaAuth]); 
 
   const handleCardOpen = (event) => {
     setCardOpen(true);
@@ -81,18 +93,18 @@ export function ItemList(props) {
 
   const handleCardClose = () => setCardOpen(false);
 
-const { authState, oktaAuth } = useOktaAuth();
-const [userInfo, setUserInfo] = useState(null);
 
-useEffect(() => {
-  if (!authState || !authState.isAuthenticated) {
-    setUserInfo(null);
-  } else {
-    oktaAuth.getUser().then((info) => {
-      setUserInfo(info);
-    });
+  const renderItemTitle = (item) => {
+    if (item.title) {
+      return <Typography variant='body1'>{item.title}</Typography>
+    } else if (item.breed) {
+      return <Typography variant='body1'>{`${item.name} | ${item.species} | ${item.breed}`}</Typography>
+    } else {
+      return <Typography variant='body1'> {`${item.name} | ${item.species}`}</Typography>
+    }
   }
-}, [authState, oktaAuth]); 
+
+
 
 const renderDeleteIcon = (item) => {
   if (authState && authState.isAuthenticated && userInfo && userInfo.userType === 'admin') {
@@ -120,10 +132,10 @@ const renderDeleteIcon = (item) => {
           <div key={item.id}>
             <ListItem alignItems="flex-start" button data-index={item.id} onClick={handleCardOpen}>
               <ListItemAvatar>
-                <Avatar src={item.photoUrl} />
+                <Avatar src={item.image} />
               </ListItemAvatar>
               <ListItemText
-                primary={item.title || item.name}
+                primary={renderItemTitle(item)}
                 secondary={
                   <React.Fragment>
                     <Typography
