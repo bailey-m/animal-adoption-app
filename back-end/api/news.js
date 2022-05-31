@@ -69,6 +69,7 @@ app.post('/', async (req, res) =>{
 app.delete('/', async (req, res) =>{
     try {
         await firestore.collection('News_Item').doc(req.query.id).delete();
+        res.status(204).end();
     } catch (err) {
         console.log(err);
     }

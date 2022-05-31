@@ -110,16 +110,30 @@ const renderDeleteIcon = (item) => {
   if (authState && authState.isAuthenticated && userInfo && userInfo.userType === 'admin') {
     return (
       <>
-    <DeleteIcon sx={logoStyle} onClick={(e) => {e.stopPropagation();
+        <DeleteIcon sx={logoStyle} onClick={ async (e) => {
+          e.stopPropagation();
+          if (props.card === 'PetCard'){
+            const response = await axios.delete(`${API_URL}/pets?id=${item.id}`);
+            if (response.status === 204) {
+              window.location.reload(false);
+            } else {
+              alert('Something went wrong. Please try again.');
+            }
+          }
 
-      if (props.card === 'PetCard'){
-        axios.delete(`${API_URL}/pets?` +
-        `id=${item.id}`); window.location.reload(false)}
-
-      if (props.card === 'NewsCard'){
-        axios.delete(`${API_URL}/news?` +
-        `id=${item.id}`); window.location.reload(false)
-      }}}/></>)}};
+          if (props.card === 'NewsCard'){
+            const response = await axios.delete(`${API_URL}/news?id=${item.id}`);
+            if (response.status === 204) {
+              window.location.reload(false);
+            } else {
+              alert('Something went wrong. Please try again.');
+            }
+          }
+        }}/>
+      </>
+      )
+    }
+  };
 
   return (
     <>
