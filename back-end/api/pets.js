@@ -116,6 +116,7 @@ app.delete('/', async (req, res) =>{
         for (let doc of docs.docs) {
             await firestore.collection('Match').doc(doc.id).delete();
         }
+        res.status(204).end();
     } catch (err) {
         console.log(err);
     }
