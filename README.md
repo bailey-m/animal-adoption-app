@@ -13,3 +13,11 @@ To start up the app for the first time:
 9. Set your `NODE_ENV` environment variable to `development`. This will point the front-end to our server running at http://localhost:8080. On Windows, the command to do this is:
 `$env:NODE_ENV = 'development'`
 For the syntax to do this on other operating systems, refer to (https://www.geeksforgeeks.org/node_env-variables-and-how-to-use-them/).
+
+To see this from the view of user, use this login:
+
+Username: dachschund@gmail.com Password: ilovedogs678
+
+To see this from the view of an admin, use this login:
+
+Username: doggyadoptions@gmail.com Password: admin!admin!
